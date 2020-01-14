@@ -5,10 +5,8 @@ package com.example.todoist.Models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -21,6 +19,7 @@ public class Project {
 
     @Getter
     @Setter
+    @Column(columnDefinition = "TEXT")
     String name;
 
     @Getter
@@ -42,6 +41,9 @@ public class Project {
         this.commentCount=0;
         this.projectOrder=1;
     }
+
+
+
 
 
 
