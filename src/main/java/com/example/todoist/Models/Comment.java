@@ -5,29 +5,26 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
 @Entity
+@Data
 @NoArgsConstructor
-public class Section {
-
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Integer id;
 
 
-    int projectId;
+    Integer taskId;
 
-    int sectionOrder;
+    Integer projectId;
+
+    String posted;
 
     @Column(columnDefinition = "TEXT")
-    String name;
+    String content;
+
+    Object attachment;
 
 
-
-    public Section(String name, Integer project_id) {
-        this.name=name;
-        this.projectId=project_id;
-        this.sectionOrder=1;
-    }
 }
