@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,7 +25,8 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     String content;
 
-    Object attachment;
+    @OneToMany
+    List<Attachment> attachmentList;
 
 
 }
