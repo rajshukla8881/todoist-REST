@@ -20,10 +20,10 @@ public class ProjectController {
     ProjectService projectService;
 
     @GetMapping("/projects")
+    @ResponseBody
     private ResponseEntity getAllProjects()
     {
-        List<Project> projectList=projectService.getAllProjects();
-        return ResponseEntity.ok(projectList);
+        return new ResponseEntity(projectService.getAllProjects(), HttpStatus.OK);
 
     }
 

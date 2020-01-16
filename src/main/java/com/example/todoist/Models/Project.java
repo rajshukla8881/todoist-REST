@@ -2,6 +2,7 @@ package com.example.todoist.Models;
 
 
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
+@Data
 public class Project {
 
 
@@ -17,21 +19,17 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @Getter
-    @Setter
+
     @Column(columnDefinition = "TEXT")
     String name;
 
-    @Getter
-    @Setter
+
     int parent;
 
-    @Getter
-    @Setter
+
     int projectOrder;
 
-    @Getter
-    @Setter
+
     int commentCount;
 
 
