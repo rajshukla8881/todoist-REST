@@ -1,17 +1,15 @@
 package com.example.todoist.service;
 
 import com.example.todoist.model.Project;
+import com.example.todoist.responseBean.ProjectResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProjectService {
 
-    List<Project> getAllProjects();
-
+    List<ProjectResponse> getAllProjects();
     void saveProject(Project project);
-
-    Optional<Project> findProjectById(Integer id);
-
+    ProjectResponse findProjectById(Integer id);
     void deleteProject(Integer id);
+    Project getOneProjectById(Integer id);
 }

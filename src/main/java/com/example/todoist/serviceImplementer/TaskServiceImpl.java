@@ -1,4 +1,4 @@
-package com.example.todoist.serviceImpl;
+package com.example.todoist.serviceImplementer;
 
 import com.example.todoist.model.Due;
 import com.example.todoist.model.Label;
