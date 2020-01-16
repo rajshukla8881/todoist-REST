@@ -1,19 +1,17 @@
-package com.example.todoist.Models;
-
-
+package com.example.todoist.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
+//@Entity
 @NoArgsConstructor
 public class Project {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,15 +33,9 @@ public class Project {
     @Setter
     int commentCount;
 
-
-
     public Project(String name) {
-        this.name=name;
-        this.commentCount=0;
-        this.projectOrder=1;
+        this.name = name;
+        this.commentCount = 0;
+        this.projectOrder = 1;
     }
-
-
-
-
 }
