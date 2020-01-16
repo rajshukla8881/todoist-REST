@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class CommentRequest {
-    Integer taskId;
-    Integer projectId;
+    Integer task_id;
+    Integer project_id;
     String content;
     Object attachment;
 }
