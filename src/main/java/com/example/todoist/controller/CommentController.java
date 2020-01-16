@@ -1,8 +1,8 @@
-package com.example.todoist.Controllers;
+package com.example.todoist.controller;
 
-import com.example.todoist.Models.Attachment;
-import com.example.todoist.Models.Comment;
-import com.example.todoist.Services.CommentService;
+import com.example.todoist.model.Attachment;
+import com.example.todoist.model.Comment;
+import com.example.todoist.service.CommentService;
 import com.example.todoist.requestBean.CommentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

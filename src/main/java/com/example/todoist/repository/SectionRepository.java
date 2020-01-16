@@ -1,6 +1,6 @@
-package com.example.todoist.Repository;
+package com.example.todoist.repository;
 
-import com.example.todoist.Models.Section;
+import com.example.todoist.model.Section;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

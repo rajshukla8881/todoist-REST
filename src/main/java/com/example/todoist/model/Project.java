@@ -1,4 +1,4 @@
-package com.example.todoist.Models;
+package com.example.todoist.model;
 
 
 

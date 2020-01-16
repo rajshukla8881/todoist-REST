@@ -1,4 +1,4 @@
-package com.example.todoist.Controllers;
+package com.example.todoist.controller;
 
 
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,8 +1,9 @@
-package com.example.todoist.Services;
+package com.example.todoist.serviceImplementer;
 
-import com.example.todoist.Models.Project;
-import com.example.todoist.Repository.ProjectRepository;
+import com.example.todoist.model.Project;
+import com.example.todoist.repository.ProjectRepository;
 import com.example.todoist.responseBean.ProjectResponse;
+import com.example.todoist.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

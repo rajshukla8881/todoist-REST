@@ -1,9 +1,8 @@
-package com.example.todoist.Repository;
+package com.example.todoist.repository;
 
-import com.example.todoist.Models.Comment;
+import com.example.todoist.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment,Integer> {

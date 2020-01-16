@@ -1,17 +1,13 @@
-package com.example.todoist.Controllers;
+package com.example.todoist.controller;
 
-import com.example.todoist.Models.Project;
-import com.example.todoist.Services.ProjectService;
+import com.example.todoist.model.Project;
+import com.example.todoist.service.ProjectService;
 import com.example.todoist.requestBean.ProjectRequest;
 import com.example.todoist.responseBean.ProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/rest/v1")

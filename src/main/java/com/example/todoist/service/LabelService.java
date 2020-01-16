@@ -1,11 +1,9 @@
-package com.example.todoist.Services;
+package com.example.todoist.service;
 
-import com.example.todoist.Models.Label;
-import com.example.todoist.Models.Section;
+import com.example.todoist.model.Label;
 import com.example.todoist.responseBean.LabelResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface LabelService {
     List<LabelResponse> getAllLabels();

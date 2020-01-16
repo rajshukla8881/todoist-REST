@@ -1,16 +1,13 @@
-package com.example.todoist.Controllers;
+package com.example.todoist.controller;
 
-import com.example.todoist.Models.Section;
-import com.example.todoist.Services.SectionService;
+import com.example.todoist.model.Section;
+import com.example.todoist.service.SectionService;
 import com.example.todoist.requestBean.ServiceRequest;
 import com.example.todoist.responseBean.SectionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/rest/v1")

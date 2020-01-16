@@ -1,10 +1,9 @@
-package com.example.todoist.Services;
+package com.example.todoist.service;
 
-import com.example.todoist.Models.Section;
+import com.example.todoist.model.Section;
 import com.example.todoist.responseBean.SectionResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface SectionService {
 

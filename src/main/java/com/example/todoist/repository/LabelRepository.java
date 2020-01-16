@@ -1,6 +1,6 @@
-package com.example.todoist.Repository;
+package com.example.todoist.repository;
 
-import com.example.todoist.Models.Label;
+import com.example.todoist.model.Label;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

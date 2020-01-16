@@ -1,7 +1,8 @@
-package com.example.todoist.Services;
+package com.example.todoist.serviceImplementer;
 
-import com.example.todoist.Models.Comment;
-import com.example.todoist.Repository.CommentRepository;
+import com.example.todoist.model.Comment;
+import com.example.todoist.repository.CommentRepository;
+import com.example.todoist.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

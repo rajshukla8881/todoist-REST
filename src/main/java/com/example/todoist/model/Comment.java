@@ -1,26 +1,32 @@
-package com.example.todoist.Models;
+package com.example.todoist.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Label {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+
+    Integer taskId;
+
+    Integer projectId;
+
+    String posted;
+
     @Column(columnDefinition = "TEXT")
-    String name;
+    String content;
 
-    int labelOrder;
+    @OneToMany
+    List<Attachment> attachmentList;
 
-    public Label(String name) {
-        this.name=name;
-        this.labelOrder=10;
-    }
+
 }

@@ -1,11 +1,8 @@
-package com.example.todoist.Controllers;
+package com.example.todoist.controller;
 
-import com.example.todoist.Models.Label;
-import com.example.todoist.Models.Section;
-import com.example.todoist.Services.LabelService;
-import com.example.todoist.Services.SectionService;
+import com.example.todoist.model.Label;
+import com.example.todoist.service.LabelService;
 import com.example.todoist.requestBean.LabelRequest;
-import com.example.todoist.requestBean.ServiceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

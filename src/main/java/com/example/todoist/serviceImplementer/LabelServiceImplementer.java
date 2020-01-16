@@ -1,10 +1,9 @@
-package com.example.todoist.Services;
+package com.example.todoist.serviceImplementer;
 
-import com.example.todoist.Models.Label;
-import com.example.todoist.Models.Section;
-import com.example.todoist.Repository.LabelRepository;
+import com.example.todoist.model.Label;
+import com.example.todoist.repository.LabelRepository;
 import com.example.todoist.responseBean.LabelResponse;
-import com.example.todoist.responseBean.SectionResponse;
+import com.example.todoist.service.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,7 @@
-package com.example.todoist.Services;
+package com.example.todoist.service;
 
-import com.example.todoist.Models.Comment;
+import com.example.todoist.model.Comment;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Optional;
 
 public interface CommentService {
