@@ -1,27 +1,18 @@
 package com.example.todoist.model;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-import javax.persistence.*;
-
-//@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@Entity
 public class Attachment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long fileId;
+    Integer id;
+    String resourceType;
+    String fileUrl;
+    String fileType;
+    String fileName;
 
-    private long fileSize;
-    private String fileType;
-    private String fileName;
-    private String uploadState;
-    private String resourceType;
-    private String fileUrl;
-
-/*    @ManyToOne
-    private Comment comment;*/
 }
