@@ -43,10 +43,10 @@ public class LabelController {
     private ResponseEntity updateLabel(@PathVariable("id")Integer id,@RequestBody LabelRequest labelRequest)
     {
 
-            Label label=labelService.getOneLabelById(id);
-            label.setName(labelRequest.getName());
-            labelService.saveLabel(label);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        Label label=labelService.getOneLabelById(id);
+        label.setName(labelRequest.getName());
+        labelService.saveLabel(label);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
 
     }
 
@@ -55,8 +55,9 @@ public class LabelController {
     private ResponseEntity deleteLabel(@PathVariable("id")Integer id)
     {
 
-            labelService.deleteLabelById(id);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        labelService.deleteLabelById(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
 
     }
+
 }
