@@ -19,4 +19,7 @@ public interface ProjectRepository extends JpaRepository<Project,Integer> {
 
     @Override
     void deleteById(Integer integer);
+
+    @Override
+    Project getOne(Integer integer);
 }

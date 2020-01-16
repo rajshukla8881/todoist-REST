@@ -15,4 +15,7 @@ public interface SectionRepository extends JpaRepository<Section,Integer> {
 
     @Override
     void deleteById(Integer integer);
+
+    @Override
+    Section getOne(Integer integer);
 }

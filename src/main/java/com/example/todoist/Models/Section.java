@@ -30,4 +30,10 @@ public class Section {
         this.projectId=project_id;
         this.sectionOrder=1;
     }
+
+    public Section(String name, Integer project_id, Integer order) {
+        this.name=name;
+        this.projectId=project_id;
+        this.sectionOrder=order;
+    }
 }

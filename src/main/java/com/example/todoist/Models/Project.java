@@ -2,16 +2,16 @@ package com.example.todoist.Models;
 
 
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
+
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Project {
 
 
@@ -41,9 +41,10 @@ public class Project {
     }
 
 
-
-
-
-
-
+    public Project(String name, Integer parent) {
+        this.name=name;
+        this.parent=parent;
+        this.commentCount=0;
+        this.projectOrder=1;
+    }
 }

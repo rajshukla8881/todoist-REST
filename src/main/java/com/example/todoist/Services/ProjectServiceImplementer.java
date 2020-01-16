@@ -2,9 +2,11 @@ package com.example.todoist.Services;
 
 import com.example.todoist.Models.Project;
 import com.example.todoist.Repository.ProjectRepository;
+import com.example.todoist.responseBean.ProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +21,21 @@ public class ProjectServiceImplementer implements ProjectService {
 
 
     @Override
-    public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+    public List<ProjectResponse> getAllProjects() {
+        List<Project> projectList=projectRepository.findAll();
+        List<ProjectResponse> projectResponseList=new ArrayList<>();
+        for(Project projectListIterator:projectList)
+        {
+            ProjectResponse projectResponse=new ProjectResponse();
+            projectResponse.setId(projectListIterator.getId());
+            projectResponse.setName(projectListIterator.getName());
+            projectResponse.setComment_count(projectListIterator.getCommentCount());
+            projectResponse.setOrder(projectListIterator.getProjectOrder());
+            projectResponseList.add(projectResponse);
+
+        }
+
+        return projectResponseList;
     }
 
     @Override
@@ -29,12 +44,32 @@ public class ProjectServiceImplementer implements ProjectService {
     }
 
     @Override
-    public Optional<Project> findProjectById(Integer id) {
-        return projectRepository.findById(id);
+    public ProjectResponse findProjectById(Integer id) {
+        Optional<Project> projectOptional=projectRepository.findById(id);
+        if(projectOptional.isPresent())
+        {
+            Project project=projectOptional.get();
+            ProjectResponse projectResponse=new ProjectResponse();
+            projectResponse.setId(project.getId());
+            projectResponse.setName(project.getName());
+            projectResponse.setComment_count(project.getCommentCount());
+            projectResponse.setOrder(project.getProjectOrder());
+
+            return projectResponse;
+        }
+        else
+        {
+            return new ProjectResponse();
+        }
     }
 
     @Override
     public void deleteProject(Integer id) {
         projectRepository.deleteById(id);
+    }
+
+    @Override
+    public Project getOneProjectById(Integer id) {
+        return projectRepository.getOne(id);
     }
 }

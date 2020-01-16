@@ -3,6 +3,7 @@ package com.example.todoist.Controllers;
 import com.example.todoist.Models.Project;
 import com.example.todoist.Services.ProjectService;
 import com.example.todoist.requestBean.ProjectRequest;
+import com.example.todoist.responseBean.ProjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,34 +33,47 @@ public class ProjectController {
     @ResponseBody
     private ResponseEntity<?> addProject(@RequestBody ProjectRequest projectRequest)
     {
-        Project project=new Project(projectRequest.getName());
-        projectService.saveProject(project);
-        return ResponseEntity.ok(project);
+
+        Project project;
+
+       if(projectRequest.getParent()==null)
+           project = new Project(projectRequest.getName());
+       else
+           project=new Project(projectRequest.getName(),projectRequest.getParent());
+
+
+       projectService.saveProject(project);
+       ProjectResponse projectResponse=new ProjectResponse();
+       projectResponse.setId(project.getId());
+       projectResponse.setName(project.getName());
+       projectResponse.setComment_count(project.getCommentCount());
+       projectResponse.setOrder(project.getProjectOrder());
+       return ResponseEntity.ok(projectResponse);
     }
 
     @GetMapping("/projects/{id}")
     private ResponseEntity getProject(@PathVariable("id")Integer id)
     {
-        Optional<Project> projectOptional=projectService.findProjectById(id);
-        return ResponseEntity.ok(projectOptional.get());
+        return ResponseEntity.ok(projectService.findProjectById(id));
     }
 
     @PostMapping("/projects/{id}")
     private ResponseEntity updateProject(@PathVariable("id")Integer id,@RequestBody ProjectRequest projectRequest)
     {
-        Optional<Project> projectOptional=projectService.findProjectById(id);
-        Project project=projectOptional.get();
+
+        Project project=projectService.getOneProjectById(id);
         project.setName(projectRequest.getName());
         projectService.saveProject(project);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
 
     }
 
 
     @DeleteMapping("projects/{id}")
-    private void deleteProject(@PathVariable("id")Integer id)
+    private ResponseEntity deleteProject(@PathVariable("id")Integer id)
     {
         projectService.deleteProject(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
