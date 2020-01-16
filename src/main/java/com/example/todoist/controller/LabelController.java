@@ -59,5 +59,4 @@ public class LabelController {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
 
     }
-
 }

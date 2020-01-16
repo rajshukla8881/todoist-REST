@@ -1,5 +1,6 @@
 package com.example.todoist.model;
 
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
