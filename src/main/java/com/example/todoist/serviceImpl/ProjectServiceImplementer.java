@@ -1,22 +1,19 @@
-package com.example.todoist.Services;
+package com.example.todoist.serviceImpl;
 
-import com.example.todoist.Models.Project;
-import com.example.todoist.Repository.ProjectRepository;
+import com.example.todoist.model.Project;
+import com.example.todoist.repository.ProjectRepository;
+import com.example.todoist.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+//@Service
 public class ProjectServiceImplementer implements ProjectService {
-
-
 
     @Autowired
     ProjectRepository projectRepository;
-
-
 
     @Override
     public List<Project> getAllProjects() {
