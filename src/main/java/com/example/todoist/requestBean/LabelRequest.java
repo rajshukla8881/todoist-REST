@@ -1,9 +1,14 @@
 package com.example.todoist.requestBean;
 
-import lombok.Data;
+import lombok.*;
 
+@Builder
 @Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class LabelRequest {
-    String name;
-    Integer order;
+    private int id;
+    private String name;
+    private int order;
 }
