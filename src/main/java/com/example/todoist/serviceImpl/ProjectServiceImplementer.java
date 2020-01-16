@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-//@Service
+@Service
 public class ProjectServiceImplementer implements ProjectService {
 
     @Autowired
     ProjectRepository projectRepository;
+
 
     @Override
     public List<Project> getAllProjects() {

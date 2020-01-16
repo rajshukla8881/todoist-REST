@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-//@RestController
-//@RequestMapping("/rest/v1")
+@RestController
+@RequestMapping("/rest/v1")
 public class ProjectController {
 
     @Autowired

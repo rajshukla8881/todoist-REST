@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DueRequest {
+    private int id;
     private String string;
     private String date;
     private String dateTime;
