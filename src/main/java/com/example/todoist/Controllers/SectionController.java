@@ -55,12 +55,12 @@ public class SectionController {
     @PostMapping("/sections/{id}")
     private ResponseEntity updateSection(@PathVariable("id")Integer id,@RequestBody ServiceRequest serviceRequest)
     {
-//        Section section=sectionService.getOneSectionById(id);
-//        SectionResponse sectionResponse=new SectionResponse();
-//        sectionResponse.setId(section.getId());
-//        sectionResponse.setProject_id(section.getProjectId());
-//        sectionResponse.setOrder(section.getSectionOrder());
-//        sectionResponse.setName(section.getName());
+        Section section=sectionService.getOneSectionById(id);
+        SectionResponse sectionResponse=new SectionResponse();
+        sectionResponse.setId(section.getId());
+        sectionResponse.setProject_id(section.getProjectId());
+        sectionResponse.setOrder(section.getSectionOrder());
+        sectionResponse.setName(section.getName());
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

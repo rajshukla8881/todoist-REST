@@ -17,4 +17,7 @@ public interface LabelRepository extends JpaRepository<Label,Integer> {
 
     @Override
     void deleteById(Integer integer);
+
+    @Override
+    Label getOne(Integer integer);
 }

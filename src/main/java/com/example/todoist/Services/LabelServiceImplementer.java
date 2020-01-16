@@ -1,10 +1,14 @@
 package com.example.todoist.Services;
 
 import com.example.todoist.Models.Label;
+import com.example.todoist.Models.Section;
 import com.example.todoist.Repository.LabelRepository;
+import com.example.todoist.responseBean.LabelResponse;
+import com.example.todoist.responseBean.SectionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +19,21 @@ public class LabelServiceImplementer implements LabelService {
     LabelRepository labelRepository;
 
     @Override
-    public List<Label> getAllLabels() {
-        return labelRepository.findAll();
+    public List<LabelResponse> getAllLabels() {
+        List<Label> labelList=labelRepository.findAll();
+        List<LabelResponse> labelResponseList=new ArrayList<>();
+        for(Label labelListIterator:labelList)
+        {
+            LabelResponse labelResponse=new LabelResponse();
+            labelResponse.setId(labelListIterator.getId());
+            labelResponse.setName(labelListIterator.getName());
+            labelResponse.setOrder(labelListIterator.getLabelOrder());
+
+            labelResponseList.add(labelResponse);
+
+        }
+
+        return labelResponseList;
     }
 
     @Override
@@ -25,12 +42,31 @@ public class LabelServiceImplementer implements LabelService {
     }
 
     @Override
-    public Optional<Label> getLabelById(Integer id) {
-        return labelRepository.findById(id);
+    public LabelResponse getLabelById(Integer id) {
+        Optional<Label> labelOptional=labelRepository.findById(id);
+        if(labelOptional.isPresent())
+        {
+            Label label=labelOptional.get();
+            LabelResponse labelResponse=new LabelResponse();
+            labelResponse.setId(label.getId());
+            labelResponse.setName(label.getName());
+            labelResponse.setOrder(label.getLabelOrder());
+
+            return labelResponse;
+        }
+        else
+        {
+            return new LabelResponse();
+        }
     }
 
     @Override
     public void deleteLabelById(Integer id) {
         labelRepository.deleteById(id);
+    }
+
+    @Override
+    public Label getOneLabelById(Integer id) {
+        return labelRepository.getOne(id);
     }
 }
