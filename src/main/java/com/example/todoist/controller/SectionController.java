@@ -1,5 +1,6 @@
 package com.example.todoist.controller;
 
+import com.example.todoist.model.Project;
 import com.example.todoist.model.Section;
 import com.example.todoist.service.ProjectService;
 import com.example.todoist.service.SectionService;
@@ -61,6 +62,8 @@ public class SectionController {
             else
                 section = new Section(serviceRequestName, 0, serviceRequest.getOrder());
         }
+        
+
         sectionService.saveSection(section);
         SectionResponse sectionResponse=new SectionResponse();
         sectionResponse.setId(section.getId());
