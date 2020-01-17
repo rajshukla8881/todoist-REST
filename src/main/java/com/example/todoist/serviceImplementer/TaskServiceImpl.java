@@ -8,6 +8,7 @@ import com.example.todoist.repository.LabelDAO;
 import com.example.todoist.repository.TaskDAO;
 import com.example.todoist.requestBean.DueRequest;
 import com.example.todoist.requestBean.TaskRequest;
+import com.example.todoist.responseBean.TaskResponse;
 import com.example.todoist.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +31,17 @@ public class TaskServiceImpl implements TaskService {
     LabelDAO labelDAO;
 
     @Override
-    public List<TaskRequest> getActiveTasks() {
-        log.info("request hit");
-        List<TaskRequest> activeTaskRequestList = new ArrayList<>();
+    public List<TaskResponse> getActiveTasks() {
+        List<TaskResponse> activeTaskRequestList = new ArrayList<>();
         List<Task> taskList = taskDAO.findAll();
         for (Task task : taskList) {
             if (task.getCompleted() == false) {
-                TaskRequest taskResponse = TaskRequest.builder()
+                TaskResponse taskResponse = TaskResponse.builder()
                         .id(task.getId())
-                        .projectId(task.getProjectId())
-                        .sectionId(task.getSectionId())
+                        .project_id(task.getProjectId())
+                        .section_id(task.getSectionId())
                         .content(task.getContent())
-                        .commentCount(task.getCommentCount())
+                        .comment_count(task.getCommentCount())
                         .order(task.getOrders())
                         .priority(task.getPriority())
                         .url(task.getUrl())
@@ -66,50 +66,41 @@ public class TaskServiceImpl implements TaskService {
         task.setPriority(taskRequest.getPriority());
         task.setUrl(taskRequest.getUrl());
         task.setCommentCount(taskRequest.getCommentCount());
-        log.info("after comment count");
         Due due = null;
-        if (dueDAO.existsByString(taskRequest.getDue().getString())) {
+        if (!(taskRequest.getDue() == null) && dueDAO.existsByString(taskRequest.getDue().getString())) {
             due = dueDAO.findDueByString(taskRequest.getDue().getString());
-            log.info("old due found");
-        } else {
+        } else if (!(taskRequest.getDue() == null)) {
             due = new Due();
             due.setString(taskRequest.getDue().getString());
             due.setDate(taskRequest.getDue().getDate());
             due.setDateTime(taskRequest.getDue().getDateTime());
             due.setTimezone(taskRequest.getDue().getTimezone());
             dueDAO.save(due);
-            log.info("new due saved");
         }
         task.setDue(due);
         List<Label> labelList = new ArrayList<>();
-        for (Integer id : taskRequest.getLabelIds()) {
-            log.info("entered labelids");
-            Label label = new Label();
-            if (!labelDAO.existsById(id)) {
-                label.setId(id);
-                log.info("inside new label");
-                labelDAO.save(label);
-                log.info("label saved");
+        if (!(taskRequest.getLabelIds()==null)) {
+            for (Integer id : taskRequest.getLabelIds()) {
+                Label label = new Label();
+                if (!labelDAO.existsById(id)) {
+                    label.setId(id);
+                    labelDAO.save(label);
+                } else {
+                    label = labelDAO.getOne(id);
+                }
+                labelList.add(label);
             }
-            else {
-                label = labelDAO.getOne(id);
-                log.info("inside existing label");
-            }
-            log.info("about to save label");
-            labelList.add(label);
-            log.info("label added");
         }
         task.setLabelList(labelList);
-        log.info("labelList saved");
         Task saveTask = taskDAO.save(task);
-        log.info("task saved");
 
         DueRequest dueRequest = new DueRequest();
-        dueRequest.setDate(saveTask.getDue().getDate());
-        dueRequest.setDateTime(saveTask.getDue().getDateTime());
-        dueRequest.setString(saveTask.getDue().getString());
-        dueRequest.setTimezone(saveTask.getDue().getTimezone());
-
+        if (!(saveTask.getDue() == null)) {
+            dueRequest.setDate(saveTask.getDue().getDate());
+            dueRequest.setDateTime(saveTask.getDue().getDateTime());
+            dueRequest.setString(saveTask.getDue().getString());
+            dueRequest.setTimezone(saveTask.getDue().getTimezone());
+        }
         TaskRequest taskResponse = TaskRequest.builder()
                 .commentCount(saveTask.getCommentCount())
                 .completed(saveTask.getCompleted())
@@ -172,15 +163,21 @@ public class TaskServiceImpl implements TaskService {
             due.setDate(taskRequest.getDue().getDate());
             due.setDateTime(taskRequest.getDue().getDateTime());
             due.setTimezone(taskRequest.getDue().getTimezone());
+            dueDAO.save(due);
         }
         task.setDue(due);
-        List<Label> labelIds = new ArrayList<>();
-        for (Integer labelId : taskRequest.getLabelIds()) {
+        List<Label> labelList = new ArrayList<>();
+        for (Integer ids : taskRequest.getLabelIds()) {
             Label label = new Label();
-            label.setId(labelId);
-            labelIds.add(label);
+            if (!labelDAO.existsById(ids)) {
+                label.setId(ids);
+                labelDAO.save(label);
+            } else {
+                label = labelDAO.getOne(ids);
+            }
+            labelList.add(label);
         }
-        task.setLabelList(labelIds);
+        task.setLabelList(labelList);
         taskDAO.save(task);
     }
 
@@ -189,6 +186,7 @@ public class TaskServiceImpl implements TaskService {
     public void closeTask(int id) {
         Task task = taskDAO.getOne(id);
         task.setCompleted(true);
+        taskDAO.save(task);
     }
 
 
@@ -196,6 +194,7 @@ public class TaskServiceImpl implements TaskService {
     public void reopenTask(int id) {
         Task task = taskDAO.getOne(id);
         task.setCompleted(false);
+        taskDAO.save(task);
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.todoist.controller;
 
 import com.example.todoist.requestBean.TaskRequest;
+import com.example.todoist.responseBean.TaskResponse;
 import com.example.todoist.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class TaskController {
     TaskService taskService;
 
     @GetMapping("/tasks")
-    public ResponseEntity<List<TaskRequest>> getActiveTaskList() {
-        return new ResponseEntity<List<TaskRequest>>(taskService.getActiveTasks(), HttpStatus.OK);
+    public ResponseEntity<List<TaskResponse>> getActiveTaskList() {
+        return new ResponseEntity<List<TaskResponse>>(taskService.getActiveTasks(), HttpStatus.OK);
     }
 
     @PostMapping("/tasks")
@@ -34,7 +35,7 @@ public class TaskController {
     }
 
     @PostMapping("/tasks/{id}")
-    public ResponseEntity<String> taskUpdation(@PathVariable("id") int id, TaskRequest taskRequest) {
+    public ResponseEntity<String> taskUpdation(@PathVariable("id") int id, @RequestBody TaskRequest taskRequest) {
         taskService.updateTask(id, taskRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

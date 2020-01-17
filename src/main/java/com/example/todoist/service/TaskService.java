@@ -1,12 +1,13 @@
 package com.example.todoist.service;
 
 import com.example.todoist.requestBean.TaskRequest;
+import com.example.todoist.responseBean.TaskResponse;
 
 import java.util.List;
 
 public interface TaskService {
 
-    List<TaskRequest> getActiveTasks();
+    List<TaskResponse> getActiveTasks();
 
     TaskRequest createTask(TaskRequest taskRequest);
 
