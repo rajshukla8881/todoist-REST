@@ -1,7 +1,8 @@
 package com.example.todoist.controller;
 
 import com.example.todoist.requestBean.TaskRequest;
-import com.example.todoist.responseBean.TaskResponse;
+import com.example.todoist.responseBean.ActiveTaskResponse;
+import com.example.todoist.responseBean.CreateTaskResponse;
 import com.example.todoist.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,41 +21,63 @@ public class TaskController {
     TaskService taskService;
 
     @GetMapping("/tasks")
-    public ResponseEntity<List<TaskResponse>> getActiveTaskList() {
-        return new ResponseEntity<List<TaskResponse>>(taskService.getActiveTasks(), HttpStatus.OK);
+    public ResponseEntity<List<ActiveTaskResponse>> getActiveTaskList() {
+        return new ResponseEntity<List<ActiveTaskResponse>>(taskService.getActiveTasks(), HttpStatus.OK);
     }
 
     @PostMapping("/tasks")
-    public ResponseEntity<TaskRequest> taskCreation(@RequestBody TaskRequest taskRequest) {
-        return new ResponseEntity<TaskRequest>(taskService.createTask(taskRequest), HttpStatus.OK);
+    public ResponseEntity<CreateTaskResponse> taskCreation(@RequestBody TaskRequest taskRequest) {
+        CreateTaskResponse createTaskResponse = taskService.createTask(taskRequest);
+        if (createTaskResponse == null)
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        else
+            return new ResponseEntity<CreateTaskResponse>(createTaskResponse, HttpStatus.OK);
     }
 
     @GetMapping("/tasks/{id}")
-    public ResponseEntity<TaskRequest> getAnActiveTask(@PathVariable("id") int id) {
-        return new ResponseEntity<TaskRequest>(taskService.getActiveTask(id), HttpStatus.OK);
+    public ResponseEntity<CreateTaskResponse> getAnActiveTask(@PathVariable("id") int id) {
+        CreateTaskResponse createTaskResponse = taskService.getActiveTask(id);
+        if (createTaskResponse == null)
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        else
+            return new ResponseEntity<CreateTaskResponse>(createTaskResponse, HttpStatus.OK);
     }
 
     @PostMapping("/tasks/{id}")
     public ResponseEntity<String> taskUpdation(@PathVariable("id") int id, @RequestBody TaskRequest taskRequest) {
-        taskService.updateTask(id, taskRequest);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        int obtainedId = taskService.updateTask(id, taskRequest);
+        if (obtainedId == 0)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else if (obtainedId == -1)
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        else
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/tasks/{id}/close")
     public ResponseEntity<String> taskClosure(@PathVariable("id") int id) {
-        taskService.closeTask(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        int obtainedId = taskService.closeTask(id);
+        if (obtainedId == 0)
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        else
+            return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/tasks/{id}/reopen")
     public ResponseEntity<String> taskReopen(@PathVariable("id") int id) {
-        taskService.reopenTask(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        int obtainedId = taskService.reopenTask(id);
+        if (obtainedId == 0)
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        else
+            return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity<String> taskDeletion(@PathVariable("id") int id) {
-        taskService.deleteTask(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        int obtainedId = taskService.deleteTask(id);
+        if (obtainedId == 0)
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        else
+            return new ResponseEntity<>(HttpStatus.OK);
     }
 }

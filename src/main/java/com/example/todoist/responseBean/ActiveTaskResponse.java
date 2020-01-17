@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskResponse {
+public class ActiveTaskResponse {
     private int id;
     private int project_id;
     private int section_id;

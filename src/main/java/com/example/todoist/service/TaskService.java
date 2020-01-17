@@ -1,23 +1,24 @@
 package com.example.todoist.service;
 
 import com.example.todoist.requestBean.TaskRequest;
-import com.example.todoist.responseBean.TaskResponse;
+import com.example.todoist.responseBean.ActiveTaskResponse;
+import com.example.todoist.responseBean.CreateTaskResponse;
 
 import java.util.List;
 
 public interface TaskService {
 
-    List<TaskResponse> getActiveTasks();
+    List<ActiveTaskResponse> getActiveTasks();
 
-    TaskRequest createTask(TaskRequest taskRequest);
+    CreateTaskResponse createTask(TaskRequest taskRequest);
 
-    TaskRequest getActiveTask(int id);
+    CreateTaskResponse getActiveTask(int id);
 
-    void updateTask(int id, TaskRequest taskRequest);
+    int updateTask(int id, TaskRequest taskRequest);
 
-    void closeTask(int id);
+    int closeTask(int id);
 
-    void reopenTask(int id);
+    int reopenTask(int id);
 
-    void deleteTask(int id);
+    int deleteTask(int id);
 }

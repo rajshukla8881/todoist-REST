@@ -1,8 +1,10 @@
 package com.example.todoist.requestBean;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
@@ -39,11 +41,11 @@ public class TaskRequest {
     @Value("0")
     private int priority;
 
-//    @Value("null")
+    //    @Value("null")
     private DueRequest due;
 
     //@Value("null")
-    private String url="qwe";
+    private String url = "qwe";
 
     @Value("0")
     private int commentCount;

@@ -1,6 +1,5 @@
 package com.example.todoist.responseBean;
 
-
 import lombok.Data;
 
 @Data
