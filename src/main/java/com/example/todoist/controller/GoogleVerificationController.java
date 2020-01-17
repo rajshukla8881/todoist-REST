@@ -23,7 +23,7 @@ public class GoogleVerificationController {
     }
     
     @GetMapping("/googlec4994c3d3ef026f1.html")
-    public ResponseEntity<String> getActiveTaskList() {
+    public ResponseEntity<String> getActiveTaskListHTML() {
         return new ResponseEntity<String>("google-site-verification: googlec4994c3d3ef026f1.html", HttpStatus.OK);
     }
 }
