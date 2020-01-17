@@ -10,14 +10,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
-
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/v1")
 public class ProjectController {
 
     @Autowired
     ProjectService projectService;
+
+
+    boolean checkValidProjectName(String projectName)
+    {
+        if(projectName==null || projectName.trim().length()==0)
+        {
+            return false;
+        }
+        return true;
+    }
 
     @GetMapping("/projects")
     @ResponseBody
@@ -33,18 +42,25 @@ public class ProjectController {
     private ResponseEntity<?> addProject(@RequestBody ProjectRequest projectRequest)
     {
 
+        //Check if the Project Name is Valid or Not
+        if(!checkValidProjectName(projectRequest.getName()))
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
         Project project;
 
         if(projectRequest.getParent()==null)
             project = new Project(projectRequest.getName());
         else
-            project=new Project(projectRequest.getName(),projectRequest.getParent());
+            project=new Project(projectRequest.getName().trim(),projectRequest.getParent());
 
 
         projectService.saveProject(project);
         ProjectResponse projectResponse=new ProjectResponse();
         projectResponse.setId(project.getId());
         projectResponse.setName(project.getName());
+
         projectResponse.setComment_count(project.getCommentCount());
         projectResponse.setOrder(project.getProjectOrder());
         return ResponseEntity.ok(projectResponse);
@@ -53,17 +69,33 @@ public class ProjectController {
     @GetMapping("/projects/{id}")
     private ResponseEntity getProject(@PathVariable("id")Integer id)
     {
+        if(projectService.findProjectById(id).getId()!=null)
         return ResponseEntity.ok(projectService.findProjectById(id));
+        else
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/projects/{id}")
     private ResponseEntity updateProject(@PathVariable("id")Integer id,@RequestBody ProjectRequest projectRequest)
     {
 
-        Project project=projectService.getOneProjectById(id);
-        project.setName(projectRequest.getName());
-        projectService.saveProject(project);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        //Check if the Project Name is Valid or Not
+        if(!checkValidProjectName(projectRequest.getName()))
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(projectService.findProjectById(id).getId()!=null)
+        {
+            Project project = projectService.getOneProjectById(id);
+            project.setName(projectRequest.getName().trim());
+            projectService.saveProject(project);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        else
+        {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
 
     }
 
@@ -71,8 +103,15 @@ public class ProjectController {
     @DeleteMapping("projects/{id}")
     private ResponseEntity deleteProject(@PathVariable("id")Integer id)
     {
-        projectService.deleteProject(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if(projectService.findProjectById(id).getId()!=null)
+        {
+            projectService.deleteProject(id);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        else
+        {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
 

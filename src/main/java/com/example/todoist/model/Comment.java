@@ -26,8 +26,8 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     String content;
 
-    @OneToMany
-    List<Attachment> attachmentList;
+    @OneToOne
+    Attachment attachment;
 
 
 }
