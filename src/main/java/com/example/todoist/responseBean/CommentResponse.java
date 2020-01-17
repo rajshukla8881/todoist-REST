@@ -1,14 +1,14 @@
-package com.example.todoist.requestBean;
+package com.example.todoist.responseBean;
 
 import com.example.todoist.model.Attachment;
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class CommentRequest {
+public class CommentResponse {
+    Integer id;
     Integer task_id;
     Integer project_id;
     String content;
-    AttachmentRequest attachment;
+    String posted;
+    Attachment attachment;
 }
