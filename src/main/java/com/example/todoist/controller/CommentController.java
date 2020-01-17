@@ -65,8 +65,10 @@ public class CommentController {
 
         if(commentRequest.getAttachment()!=null)
         {
+            log.info("Attachment present in JSON");
+            log.info("Attachment Value Provided in JSON is "+commentRequest.getAttachment().toString());
             Attachment attachment=new Attachment();
-            Attachment commentRequestAttachment=(Attachment)commentRequest.getAttachment();
+            Attachment commentRequestAttachment=commentRequest.getAttachment();
             attachment.setResourceType(commentRequestAttachment.getResourceType());
             attachment.setFileUrl(commentRequestAttachment.getFileUrl());
             attachment.setFileType(commentRequestAttachment.getFileType());
