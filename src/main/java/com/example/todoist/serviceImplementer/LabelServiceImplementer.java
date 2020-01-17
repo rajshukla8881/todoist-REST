@@ -19,19 +19,15 @@ public class LabelServiceImplementer implements LabelService {
 
     @Override
     public List<LabelResponse> getAllLabels() {
-        List<Label> labelList=labelRepository.findAll();
-        List<LabelResponse> labelResponseList=new ArrayList<>();
-        for(Label labelListIterator:labelList)
-        {
-            LabelResponse labelResponse=new LabelResponse();
+        List<Label> labelList = labelRepository.findAll();
+        List<LabelResponse> labelResponseList = new ArrayList<>();
+        for (Label labelListIterator : labelList) {
+            LabelResponse labelResponse = new LabelResponse();
             labelResponse.setId(labelListIterator.getId());
             labelResponse.setName(labelListIterator.getName());
             labelResponse.setOrder(labelListIterator.getLabelOrder());
-
             labelResponseList.add(labelResponse);
-
         }
-
         return labelResponseList;
     }
 
@@ -42,19 +38,15 @@ public class LabelServiceImplementer implements LabelService {
 
     @Override
     public LabelResponse getLabelById(Integer id) {
-        Optional<Label> labelOptional=labelRepository.findById(id);
-        if(labelOptional.isPresent())
-        {
-            Label label=labelOptional.get();
-            LabelResponse labelResponse=new LabelResponse();
+        Optional<Label> labelOptional = labelRepository.findById(id);
+        if (labelOptional.isPresent()) {
+            Label label = labelOptional.get();
+            LabelResponse labelResponse = new LabelResponse();
             labelResponse.setId(label.getId());
             labelResponse.setName(label.getName());
             labelResponse.setOrder(label.getLabelOrder());
-
             return labelResponse;
-        }
-        else
-        {
+        } else {
             return new LabelResponse();
         }
     }

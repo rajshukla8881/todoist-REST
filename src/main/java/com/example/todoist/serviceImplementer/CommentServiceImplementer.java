@@ -95,7 +95,7 @@ public class CommentServiceImplementer implements CommentService {
     public void deleteCommentById(Integer id) {
         commentRepository.deleteById(id);
     }
-
+  
     @Override
     public Comment getOneCommentById(Integer id) {
         return commentRepository.getOne(id);

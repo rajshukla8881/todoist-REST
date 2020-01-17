@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentService {
+
     List<CommentResponse> getAllCommentByProjectId(Integer id);
     List<CommentResponse> getAllCommentByTaskId(Integer id);
     void saveComment(Comment comment);

@@ -2,12 +2,12 @@ package com.example.todoist.model;
 
 
 
+
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-
 @Data
 @Builder
 @AllArgsConstructor

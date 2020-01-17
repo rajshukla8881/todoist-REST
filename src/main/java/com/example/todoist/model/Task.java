@@ -33,8 +33,8 @@ public class Task implements Serializable {
     @Column(nullable = false)
     private Boolean completed;
 
-    @OneToMany
-    private List<Label> labelIds;
+    @ManyToMany
+    private List<Label> labelList;
 
     private int parent;
 
@@ -47,7 +47,7 @@ public class Task implements Serializable {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     private Due due;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String url;
 
     @Column(nullable = true)
