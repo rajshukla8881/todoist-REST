@@ -2,10 +2,13 @@ package com.example.todoist.controller;
 
 import com.example.todoist.model.Attachment;
 import com.example.todoist.model.Comment;
+import com.example.todoist.requestBean.AttachmentRequest;
 import com.example.todoist.responseBean.CommentResponse;
 import com.example.todoist.service.AttachmentService;
 import com.example.todoist.service.CommentService;
 import com.example.todoist.requestBean.CommentRequest;
+import com.example.todoist.service.ProjectService;
+import com.example.todoist.service.SectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,22 @@ public class CommentController {
 
     @Autowired
     AttachmentService attachmentService;
+
+    @Autowired
+    ProjectService projectService;
+
+    @Autowired
+    SectionService sectionService;
+
+    boolean checkValidCommentInput(String commentName)
+    {
+        if(commentName==null || commentName.trim().length()==0)
+        {
+            return false;
+        }
+        return true;
+    }
+
 
 
     @GetMapping("/comments")
@@ -48,32 +67,52 @@ public class CommentController {
     @ResponseBody
     public ResponseEntity createComment(@RequestBody CommentRequest commentRequest)
     {
+        if(!checkValidCommentInput(commentRequest.getContent()))
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
         log.info("Comment Content By commentRequest is "+commentRequest.getContent());
         log.info("Comment TaskId By commentRequest is "+commentRequest.getTask_id());
         log.info("Comment ProjectId By commentRequest is "+commentRequest.getProject_id());
         Comment comment=new Comment();
-        comment.setContent(commentRequest.getContent());
+        comment.setContent(commentRequest.getContent().trim());
         if(commentRequest.getProject_id()!=null)
         {
-            comment.setProjectId(commentRequest.getProject_id());
+            Integer id=commentRequest.getProject_id();
+            if(projectService.findProjectById(id).getId()!=null)
+                comment.setProjectId(commentRequest.getProject_id());
+            else
+                comment.setProjectId(0);
         }
         else
         {
             log.info("Setting Task Id for Comment");
-            comment.setTaskId(commentRequest.getTask_id());
+            Integer id=commentRequest.getTask_id();
+            if(sectionService.getSectionById(id).getId()!=null)
+                comment.setProjectId(commentRequest.getProject_id());
+            else
+                comment.setProjectId(0);
         }
+
+
 
         if(commentRequest.getAttachment()!=null)
         {
             log.info("Attachment present in JSON");
             log.info("Attachment Value Provided in JSON is "+commentRequest.getAttachment().toString());
+
             Attachment attachment=new Attachment();
-            Attachment commentRequestAttachment=commentRequest.getAttachment();
-            attachment.setResourceType(commentRequestAttachment.getResourceType());
-            attachment.setFileUrl(commentRequestAttachment.getFileUrl());
-            attachment.setFileType(commentRequestAttachment.getFileType());
-            attachment.setFileName(commentRequestAttachment.getFileName());
+            AttachmentRequest attachmentRequest=commentRequest.getAttachment();
+            attachment.setResourceType(attachmentRequest.getResource_type());
+            attachment.setFileUrl(attachmentRequest.getFile_url());
+            attachment.setFileType(attachmentRequest.getFile_type());
+            attachment.setFileName(attachmentRequest.getFile_name());
+            //Adding Attachment in Comment
+            comment.setAttachment(attachment);
+            //Saving Attachment in Database
             attachmentService.saveAttachment(attachment);
+
             // set Attachment Details Here
 
         }
@@ -98,6 +137,7 @@ public class CommentController {
             commentResponse.setTask_id(comment.getTaskId());
 
         commentResponse.setPosted(comment.getPosted());
+        log.info("Comment Attachment By comment Object is "+comment.getAttachment());
         commentResponse.setAttachment(comment.getAttachment());
 
         return new ResponseEntity(commentResponse,HttpStatus.OK);
@@ -107,25 +147,45 @@ public class CommentController {
     @GetMapping("/comments/{id}")
     public ResponseEntity getCommentById(@PathVariable("id")Integer id)
     {
-        return new ResponseEntity(commentService.getCommentById(id),HttpStatus.OK);
+        if(commentService.getCommentById(id).getId()!=null)
+            return new ResponseEntity(commentService.getCommentById(id),HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
     }
 
     @PostMapping("/comments/{id}")
     public ResponseEntity updateCommentById(@PathVariable("id")Integer id,@RequestBody CommentRequest commentRequest)
     {
+        if(!checkValidCommentInput(commentRequest.getContent()))
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
 
-            Comment comment=commentService.getOneCommentById(id);
-            comment.setContent(commentRequest.getContent());
+        if(commentService.getCommentById(id).getId()!=null) {
+            Comment comment = commentService.getOneCommentById(id);
+            comment.setContent(commentRequest.getContent().trim());
             commentService.saveComment(comment);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
 
     @DeleteMapping("/comments/{id}")
     public ResponseEntity deleteCommentById(@PathVariable("id")Integer id)
     {
-        commentService.deleteCommentById(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if(commentService.getCommentById(id).getId()!=null)
+        {
+            commentService.deleteCommentById(id);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        else
+        {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
 

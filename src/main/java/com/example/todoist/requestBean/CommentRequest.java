@@ -10,5 +10,5 @@ public class CommentRequest {
     Integer task_id;
     Integer project_id;
     String content;
-    Attachment attachment;
+    AttachmentRequest attachment;
 }
