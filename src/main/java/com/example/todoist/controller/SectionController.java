@@ -2,6 +2,7 @@ package com.example.todoist.controller;
 
 import com.example.todoist.model.Project;
 import com.example.todoist.model.Section;
+import com.example.todoist.repository.TaskDAO;
 import com.example.todoist.service.ProjectService;
 import com.example.todoist.service.SectionService;
 import com.example.todoist.requestBean.ServiceRequest;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/v1")
 public class SectionController {
@@ -20,6 +21,9 @@ public class SectionController {
 
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    TaskDAO taskDAO;
 
     boolean checkValidSectionInput(String sectionName,Integer projectId)
     {
@@ -52,18 +56,28 @@ public class SectionController {
         Section section;
         String serviceRequestName=serviceRequest.getName().trim();
 
+        Integer projectId=0;
+
         if(serviceRequest.getOrder()==null) {
             section = new Section(serviceRequestName, serviceRequest.getProject_id());
         }
         else {
             Integer id=serviceRequest.getProject_id();
-            if(projectService.findProjectById(id).getId()!=null)
+            if(projectService.findProjectById(id).getId()!=null) {
                 section = new Section(serviceRequestName, serviceRequest.getProject_id(), serviceRequest.getOrder());
+                projectId=serviceRequest.getProject_id();
+            }
             else
                 section = new Section(serviceRequestName, 0, serviceRequest.getOrder());
         }
-        
 
+        //
+
+        Project project=projectService.getOneProjectById(projectId);
+        project.getSectionList().add(section);
+        projectService.saveProject(project);
+
+        //
         sectionService.saveSection(section);
         SectionResponse sectionResponse=new SectionResponse();
         sectionResponse.setId(section.getId());

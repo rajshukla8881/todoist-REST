@@ -4,11 +4,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 public class Section {
+
 
 
     @Id
@@ -39,4 +42,7 @@ public class Section {
         this.projectId=project_id;
         this.sectionOrder=order;
     }
+
+    @OneToMany
+    List<Task> taskList=new ArrayList<>();
 }

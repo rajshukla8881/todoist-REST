@@ -35,6 +35,12 @@ public class Project {
     int commentCount;
 
 
+    @OneToMany(cascade = CascadeType.ALL)
+    List<Section> sectionList;
+
+    @OneToMany
+    List<Task> taskList;
+
 
 
 

@@ -20,7 +20,9 @@ import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
+@CrossOrigin
 @RestController
+
 @RequestMapping("/rest/v1")
 public class CommentController {
 

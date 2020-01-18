@@ -37,6 +37,7 @@ public class TaskController {
     @GetMapping("/tasks/{id}")
     public ResponseEntity<CreateTaskResponse> getAnActiveTask(@PathVariable("id") int id) {
         CreateTaskResponse createTaskResponse = taskService.getActiveTask(id);
+
         if (createTaskResponse == null)
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         else
