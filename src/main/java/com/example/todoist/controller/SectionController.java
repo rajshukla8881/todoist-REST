@@ -53,7 +53,7 @@ public class SectionController {
         }
 
 
-        Section section;
+        Section section;   
         String serviceRequestName=serviceRequest.getName().trim();
 
         Integer projectId=0;

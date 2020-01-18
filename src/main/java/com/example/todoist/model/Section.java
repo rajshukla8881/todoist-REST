@@ -44,5 +44,5 @@ public class Section {
     }
 
     @OneToMany
-    List<Task> taskList=new ArrayList<>();
+    List<Task> taskList;
 }

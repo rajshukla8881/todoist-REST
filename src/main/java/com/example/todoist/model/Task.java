@@ -52,4 +52,12 @@ public class Task implements Serializable {
 
     @Column(nullable = true)
     private int commentCount;
+
+    //Map Open
+
+    @OneToOne
+    Comment comment;
+
+    //Map Close
+
 }

@@ -41,7 +41,8 @@ public class Project {
     @OneToMany
     List<Task> taskList;
 
-
+    @OneToOne
+    Comment comment;
 
 
     public Project(String name) {

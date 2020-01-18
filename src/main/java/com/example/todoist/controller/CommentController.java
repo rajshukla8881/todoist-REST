@@ -1,7 +1,7 @@
 package com.example.todoist.controller;
 
-import com.example.todoist.model.Attachment;
-import com.example.todoist.model.Comment;
+import com.example.todoist.model.*;
+import com.example.todoist.repository.TaskDAO;
 import com.example.todoist.requestBean.AttachmentRequest;
 import com.example.todoist.responseBean.CommentResponse;
 import com.example.todoist.service.AttachmentService;
@@ -37,6 +37,9 @@ public class CommentController {
 
     @Autowired
     SectionService sectionService;
+
+    @Autowired
+    TaskDAO taskDAO;
 
     boolean checkValidCommentInput(String commentName)
     {
@@ -86,15 +89,28 @@ public class CommentController {
                 comment.setProjectId(commentRequest.getProject_id());
             else
                 comment.setProjectId(0);
+
+            //Map Open
+            Project project=projectService.getOneProjectById(comment.getProjectId());
+            project.setComment(comment);
+            projectService.saveProject(project);
+            //Map Close
         }
         else
         {
             log.info("Setting Task Id for Comment");
             Integer id=commentRequest.getTask_id();
             if(sectionService.getSectionById(id).getId()!=null)
-                comment.setProjectId(commentRequest.getProject_id());
+                comment.setTaskId(commentRequest.getProject_id());
             else
-                comment.setProjectId(0);
+                comment.setTaskId(0);
+
+            //Map Open
+            Task task =taskDAO.getOne(comment.getTaskId());
+            task.setComment(comment);
+            taskDAO.save(task);
+            //Map Close
+
         }
 
 

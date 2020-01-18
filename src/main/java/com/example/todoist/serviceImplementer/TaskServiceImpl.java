@@ -1,8 +1,6 @@
 package com.example.todoist.serviceImplementer;
 
-import com.example.todoist.model.Due;
-import com.example.todoist.model.Label;
-import com.example.todoist.model.Task;
+import com.example.todoist.model.*;
 import com.example.todoist.repository.*;
 import com.example.todoist.requestBean.DueRequest;
 import com.example.todoist.requestBean.TaskRequest;
@@ -68,17 +66,33 @@ public class TaskServiceImpl implements TaskService {
         }
         task.setContent(taskRequest.getContent().trim());
 
+
+
         //Set project Id
         if (projectRepository.existsById(taskRequest.getProjectId()))
             task.setProjectId(taskRequest.getProjectId());
         else
             task.setProjectId(0);
 
+        //Adding Task To Particular Project - MAP Open
+        Project project=projectRepository.getOne(task.getProjectId());
+        project.getTaskList().add(task);
+        projectRepository.save(project);
+        //Map Close
+
+
+
         //Set Section Id
         if (sectionRepository.existsById(taskRequest.getSectionId()))
             task.setSectionId(taskRequest.getSectionId());
         else
             task.setSectionId(0);
+
+        //Adding Task To Particular Section - MAP Open
+        Section section =sectionRepository.getOne(task.getSectionId());
+        section.getTaskList().add(task);
+        sectionRepository.save(section);
+        //Map Close
 
         task.setCompleted(taskRequest.getCompleted());
         task.setParent(taskRequest.getParent());
