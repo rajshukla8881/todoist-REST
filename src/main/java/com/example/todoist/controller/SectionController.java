@@ -25,7 +25,17 @@ public class SectionController {
     @Autowired
     TaskDAO taskDAO;
 
-    boolean checkValidSectionInput(String sectionName,Integer projectId)
+    boolean checkValidSectionInputForUpdate(String sectionName)
+    {
+        if(sectionName==null || sectionName.trim().length()==0)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    boolean checkValidSectionInputForCreate(String sectionName,Integer projectId)
     {
         if(sectionName==null || sectionName.trim().length()==0 || projectId==null)
         {
@@ -47,13 +57,13 @@ public class SectionController {
     {
 
         //Check if the Section Input is valid or Not
-        if(!checkValidSectionInput(serviceRequest.getName(),serviceRequest.getProject_id()))
+        if(!checkValidSectionInputForCreate(serviceRequest.getName(),serviceRequest.getProject_id()))
         {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
 
-        Section section;   
+        Section section;
         String serviceRequestName=serviceRequest.getName().trim();
 
         Integer projectId=0;
@@ -71,6 +81,9 @@ public class SectionController {
                 section = new Section(serviceRequestName, 0, serviceRequest.getOrder());
         }
 
+
+        sectionService.saveSection(section);
+
         //
 
         Project project=projectService.getOneProjectById(projectId);
@@ -78,7 +91,8 @@ public class SectionController {
         projectService.saveProject(project);
 
         //
-        sectionService.saveSection(section);
+
+
         SectionResponse sectionResponse=new SectionResponse();
         sectionResponse.setId(section.getId());
         sectionResponse.setProject_id(section.getProjectId());
@@ -101,7 +115,7 @@ public class SectionController {
     private ResponseEntity updateSection(@PathVariable("id")Integer id,@RequestBody ServiceRequest serviceRequest)
     {
 
-        if(!checkValidSectionInput(serviceRequest.getName(),serviceRequest.getProject_id()))
+        if(!checkValidSectionInputForUpdate(serviceRequest.getName()))
         {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -110,11 +124,8 @@ public class SectionController {
         if(sectionService.getSectionById(id).getId()!=null)
         {
             Section section = sectionService.getOneSectionById(id);
-            SectionResponse sectionResponse = new SectionResponse();
-            sectionResponse.setId(section.getId());
-            sectionResponse.setProject_id(section.getProjectId());
-            sectionResponse.setOrder(section.getSectionOrder());
-            sectionResponse.setName(section.getName().trim());
+            section.setName(serviceRequest.getName());
+            sectionService.saveSection(section);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         else

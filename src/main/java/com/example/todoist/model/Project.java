@@ -35,7 +35,8 @@ public class Project {
     int commentCount;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "projectId1")
     List<Section> sectionList;
 
     @OneToMany
