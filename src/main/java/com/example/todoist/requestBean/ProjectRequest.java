@@ -1,14 +1,16 @@
 package com.example.todoist.requestBean;
 
+import lombok.*;
 
-import lombok.Data;
-
+@Builder
 @Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectRequest {
-
-    String name;
-    Integer parent;
-
-
-
+    private int id;
+    private String name;
+    private int parent;
+    private int orders;
+    private int comment_count;
 }

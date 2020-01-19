@@ -1,10 +1,14 @@
 package com.example.todoist.responseBean;
 
-import lombok.Data;
+import lombok.*;
 
+@Builder
 @Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class LabelResponse {
-    Integer id;
-    String name;
-    Integer order;
+    private int id;
+    private String name;
+    private int orders;
 }

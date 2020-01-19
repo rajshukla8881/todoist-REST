@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface TaskService {
 
-    List<ActiveTaskResponse> getActiveTasks();
+    List<ActiveTaskResponse> getActiveTasks(String username);
 
-    CreateTaskResponse createTask(TaskRequest taskRequest);
+    CreateTaskResponse createTask(TaskRequest taskRequest, String username);
 
     CreateTaskResponse getActiveTask(int id);
 

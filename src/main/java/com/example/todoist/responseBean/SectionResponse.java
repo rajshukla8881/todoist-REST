@@ -1,11 +1,15 @@
 package com.example.todoist.responseBean;
 
-import lombok.Data;
+import lombok.*;
 
+@Builder
 @Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class SectionResponse {
-    Integer id;
-    Integer project_id;
-    Integer order;
-    String name;
+    private int id;
+    private int project_id;
+    private int orders;
+    private String name;
 }

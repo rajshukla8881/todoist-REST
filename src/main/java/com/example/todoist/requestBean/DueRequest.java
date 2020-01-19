@@ -1,6 +1,9 @@
 package com.example.todoist.requestBean;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Builder
 @Data
@@ -10,7 +13,12 @@ import lombok.*;
 public class DueRequest {
     private int id;
     private String string;
-    private String date;
-    private String dateTime;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date date;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date datetime;
+
     private String timezone;
 }

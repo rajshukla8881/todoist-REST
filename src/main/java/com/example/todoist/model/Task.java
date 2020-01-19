@@ -22,25 +22,27 @@ public class Task implements Serializable {
     private int id;
 
     @Column(nullable = false)
-    private int projectId;
+    private int project_id;
 
     @Column(nullable = false)
-    private int sectionId;
+    private int section_id;
 
     @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
-    private Boolean completed;
+    private boolean completed;
 
     @ManyToMany
+    @Column(name = "label_ids")
     private List<Label> labelList;
+
+    @Column(name = "username")
+    private String username;
 
     private int parent;
 
-    private Integer orders;
-
-    private int indent;
+    private int orders; //order is some keyword in sql so unable to create the table with it.
 
     private int priority;
 
@@ -51,5 +53,5 @@ public class Task implements Serializable {
     private String url;
 
     @Column(nullable = true)
-    private int commentCount;
+    private int comment_count;
 }

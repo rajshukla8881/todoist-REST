@@ -1,39 +1,25 @@
 package com.example.todoist.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Data
 @Entity
+@Data
+@Table(name = "section_table")
 @NoArgsConstructor
-public class Section {
-
+@AllArgsConstructor
+@ToString
+public class Section implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-
-
-    int projectId;
-
-    int sectionOrder;
-
-    @Column(columnDefinition = "TEXT")
-    String name;
-
-
-
-    public Section(String name, Integer project_id) {
-        this.name=name;
-        this.projectId=project_id;
-        this.sectionOrder=1;
-    }
-
-    public Section(String name, Integer project_id, Integer order) {
-        this.name=name;
-        this.projectId=project_id;
-        this.sectionOrder=order;
-    }
+    private int id;
+    private int project_id;
+    private int orders;
+    private String name;
 }

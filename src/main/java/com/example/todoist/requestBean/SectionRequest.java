@@ -7,8 +7,9 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class LabelRequest {
+public class SectionRequest {
     private int id;
+    private int project_id;
+    private int order;
     private String name;
-    private int orders;
 }

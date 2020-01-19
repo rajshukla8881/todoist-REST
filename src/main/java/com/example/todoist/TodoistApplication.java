@@ -3,11 +3,10 @@ package com.example.todoist;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@SpringBootApplication
-
+@SpringBootApplication
 public class TodoistApplication {
 
-    public static void mains(String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(TodoistApplication.class, args);
     }
 

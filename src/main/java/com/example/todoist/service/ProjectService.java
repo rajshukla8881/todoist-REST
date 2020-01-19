@@ -1,6 +1,6 @@
 package com.example.todoist.service;
 
-import com.example.todoist.model.Project;
+import com.example.todoist.requestBean.ProjectRequest;
 import com.example.todoist.responseBean.ProjectResponse;
 
 import java.util.List;
@@ -9,11 +9,11 @@ public interface ProjectService {
 
     List<ProjectResponse> getAllProjects();
 
-    void saveProject(Project project);
+    ProjectResponse createNewProject(ProjectRequest projectRequest);
 
-    ProjectResponse findProjectById(Integer id);
+    ProjectResponse getProject(int id);
 
-    void deleteProject(Integer id);
+    int updateProject(int id, ProjectRequest projectRequest);
 
-    Project getOneProjectById(Integer id);
+    int deleteProject(int id);
 }

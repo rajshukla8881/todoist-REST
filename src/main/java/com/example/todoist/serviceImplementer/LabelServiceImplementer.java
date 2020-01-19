@@ -2,6 +2,7 @@ package com.example.todoist.serviceImplementer;
 
 import com.example.todoist.model.Label;
 import com.example.todoist.repository.LabelRepository;
+import com.example.todoist.requestBean.LabelRequest;
 import com.example.todoist.responseBean.LabelResponse;
 import com.example.todoist.service.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,43 +22,75 @@ public class LabelServiceImplementer implements LabelService {
     public List<LabelResponse> getAllLabels() {
         List<Label> labelList = labelRepository.findAll();
         List<LabelResponse> labelResponseList = new ArrayList<>();
-        for (Label labelListIterator : labelList) {
-            LabelResponse labelResponse = new LabelResponse();
-            labelResponse.setId(labelListIterator.getId());
-            labelResponse.setName(labelListIterator.getName());
-            labelResponse.setOrder(labelListIterator.getLabelOrder());
+        for (Label label : labelList) {
+            LabelResponse labelResponse = LabelResponse.builder()
+                    .id(label.getId())
+                    .name(label.getName())
+                    .orders(label.getOrders())
+                    .build();
             labelResponseList.add(labelResponse);
         }
         return labelResponseList;
     }
 
-    @Override
-    public void saveLabel(Label label) {
-        labelRepository.save(label);
-    }
 
     @Override
-    public LabelResponse getLabelById(Integer id) {
-        Optional<Label> labelOptional = labelRepository.findById(id);
-        if (labelOptional.isPresent()) {
-            Label label = labelOptional.get();
-            LabelResponse labelResponse = new LabelResponse();
-            labelResponse.setId(label.getId());
-            labelResponse.setName(label.getName());
-            labelResponse.setOrder(label.getLabelOrder());
-            return labelResponse;
-        } else {
-            return new LabelResponse();
+    public LabelResponse createNewLabel(LabelRequest labelRequest) {
+        Label label = new Label();
+        if (labelRequest.getName() == null || labelRequest.getName().trim().length() == 0) {
+            return null;
         }
+        label.setName(labelRequest.getName().trim());
+        label.setOrders(labelRequest.getOrders());
+        labelRepository.save(label);
+        LabelResponse labelResponse = LabelResponse.builder()
+                .id(label.getId())
+                .name(label.getName())
+                .orders(label.getOrders())
+                .build();
+        return labelResponse;
     }
 
-    @Override
-    public void deleteLabelById(Integer id) {
-        labelRepository.deleteById(id);
-    }
 
     @Override
-    public Label getOneLabelById(Integer id) {
-        return labelRepository.getOne(id);
+    public LabelResponse getLabel(int id) {
+        Optional<Label> optionalLabel = labelRepository.findById(id);
+        if (optionalLabel.isPresent()) {
+            Label label = labelRepository.getOne(id);
+            LabelResponse labelResponse = LabelResponse.builder()
+                    .id(label.getId())
+                    .name(label.getName())
+                    .orders(label.getOrders())
+                    .build();
+            return labelResponse;
+        }
+        return null;
+    }
+
+
+    @Override
+    public int updateLabel(int id, LabelRequest labelRequest) {
+        Optional<Label> optionalLabel = labelRepository.findById(id);
+        if (optionalLabel.isPresent()) {
+            Label label = labelRepository.getOne(id);
+            if (labelRequest.getName() == null || labelRequest.getName().trim().length() == 0) {
+                return -1;
+            }
+            label.setName(labelRequest.getName().trim());
+            label.setOrders(labelRequest.getOrders());
+            return labelRepository.save(label).getId();
+        }
+        return 0;
+    }
+
+
+    @Override
+    public int deleteLabel(int id) {
+        Optional<Label> optionalLabel = labelRepository.findById(id);
+        if (optionalLabel.isPresent()) {
+            labelRepository.deleteById(id);
+            return 1;
+        }
+        return 0;
     }
 }

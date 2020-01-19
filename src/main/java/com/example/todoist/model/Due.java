@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Data
@@ -21,15 +22,13 @@ public class Due implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Value("${some.key:}")
     private String string;
 
-    @Value("${some.key:}")
-    private String date;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date date;
 
-    @Value("${some.key:}")
-    private String dateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date datetime;
 
-    @Value("${some.key:}")
     private String timezone;
 }

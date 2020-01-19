@@ -1,14 +1,16 @@
 package com.example.todoist.controller;
 
-import com.example.todoist.model.Label;
-import com.example.todoist.service.LabelService;
 import com.example.todoist.requestBean.LabelRequest;
+import com.example.todoist.responseBean.LabelResponse;
+import com.example.todoist.service.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/v1")
 public class LabelController {
@@ -16,78 +18,51 @@ public class LabelController {
     @Autowired
     LabelService labelService;
 
-    boolean checkValidLabelName(String labelName)
-    {
-        if(labelName==null || labelName.trim().length()==0)
-        {
-            return false;
-        }
-        return true;
-    }
-
     @GetMapping("/labels")
     @ResponseBody
-    private ResponseEntity getAllLabels()
-    {
+    public ResponseEntity<List<LabelResponse>> getAllLabelsList() {
         return new ResponseEntity(labelService.getAllLabels(), HttpStatus.OK);
     }
 
     @PostMapping("/labels")
     @ResponseBody
-    private ResponseEntity createNewLabel(@RequestBody LabelRequest labelRequest)
-    {
-        if(!checkValidLabelName(labelRequest.getName()))
-        {
+    public ResponseEntity<LabelResponse> labelCreation(@RequestBody LabelRequest labelRequest) {
+        LabelResponse labelResponse = labelService.createNewLabel(labelRequest);
+        if (labelResponse == null)
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        Label label=new Label(labelRequest.getName().trim());
-        labelService.saveLabel(label);
-        return new ResponseEntity(label,HttpStatus.OK);
+        else
+            return new ResponseEntity<>(labelResponse, HttpStatus.OK);
     }
 
     @GetMapping("/labels/{id}")
     @ResponseBody
-    private ResponseEntity getSingleLabel(@PathVariable("id")Integer id)
-    {
-        if(labelService.getLabelById(id).getId()!=null)
-            return new ResponseEntity(labelService.getLabelById(id),HttpStatus.OK);
+    public ResponseEntity<LabelResponse> getALabel(@PathVariable("id") int id) {
+        LabelResponse labelResponse = labelService.getLabel(id);
+        if (labelResponse == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(labelResponse, HttpStatus.OK);
     }
 
     @PostMapping("/labels/{id}")
-    private ResponseEntity updateLabel(@PathVariable("id")Integer id,@RequestBody LabelRequest labelRequest)
-    {
-        if(!checkValidLabelName(labelRequest.getName()))
-        {
+    @ResponseBody
+    public ResponseEntity<String> labelUpdation(@PathVariable("id") int id, @RequestBody LabelRequest labelRequest) {
+        int obtainedId = labelService.updateLabel(id, labelRequest);
+        if (obtainedId == 0)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else if (obtainedId == -1)
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(labelService.getLabelById(id).getId()!=null) {
-            Label label = labelService.getOneLabelById(id);
-            label.setName(labelRequest.getName());
-            labelService.saveLabel(label);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
-        else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-
+        else
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
     @DeleteMapping("/labels/{id}")
-    private ResponseEntity deleteLabel(@PathVariable("id")Integer id)
-    {
-        if(labelService.getLabelById(id).getId()!=null) {
-            labelService.deleteLabelById(id);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
-        else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-
+    @ResponseBody
+    public ResponseEntity<String> labelDeletion(@PathVariable("id") int id) {
+        int obtainedId = labelService.deleteLabel(id);
+        if (obtainedId == 0)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

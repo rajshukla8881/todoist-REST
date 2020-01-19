@@ -1,6 +1,6 @@
 package com.example.todoist.service;
 
-import com.example.todoist.model.Section;
+import com.example.todoist.requestBean.SectionRequest;
 import com.example.todoist.responseBean.SectionResponse;
 
 import java.util.List;
@@ -9,12 +9,12 @@ public interface SectionService {
 
     List<SectionResponse> getAllSections();
 
-    void saveSection(Section section);
+    SectionResponse createNewSection(SectionRequest sectionRequest);
 
-    SectionResponse getSectionById(Integer id);
+    SectionResponse getSection(int id);
 
-    void deleteSectionById(Integer id);
+    int updateSection(int id, SectionRequest sectionRequest);
 
-    Section getOneSectionById(Integer id);
+    int deleteSection(int id);
 
 }

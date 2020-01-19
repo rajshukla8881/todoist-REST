@@ -1,19 +1,19 @@
 package com.example.todoist.service;
 
-import com.example.todoist.model.Label;
+import com.example.todoist.requestBean.LabelRequest;
 import com.example.todoist.responseBean.LabelResponse;
 
 import java.util.List;
 
 public interface LabelService {
+
     List<LabelResponse> getAllLabels();
 
-    void saveLabel(Label label);
+    LabelResponse createNewLabel(LabelRequest labelRequest);
 
-    LabelResponse getLabelById(Integer id);
+    LabelResponse getLabel(int id);
 
-    void deleteLabelById(Integer id);
+    int updateLabel(int id, LabelRequest labelRequest);
 
-    Label getOneLabelById(Integer id);
-
+    int deleteLabel(int id);
 }
