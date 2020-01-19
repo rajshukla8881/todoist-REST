@@ -3,6 +3,7 @@ package com.example.todoist.controller;
 import com.example.todoist.model.*;
 import com.example.todoist.repository.TaskDAO;
 import com.example.todoist.requestBean.AttachmentRequest;
+import com.example.todoist.responseBean.AttachmentResponse;
 import com.example.todoist.responseBean.CommentResponse;
 import com.example.todoist.service.AttachmentService;
 import com.example.todoist.service.CommentService;
@@ -72,10 +73,14 @@ public class CommentController {
     @ResponseBody
     public ResponseEntity createComment(@RequestBody CommentRequest commentRequest)
     {
+        boolean isProject=false;
+
         if(!checkValidCommentInput(commentRequest.getContent()))
         {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
+
+
 
         log.info("Comment Content By commentRequest is "+commentRequest.getContent());
         log.info("Comment TaskId By commentRequest is "+commentRequest.getTask_id());
@@ -84,17 +89,14 @@ public class CommentController {
         comment.setContent(commentRequest.getContent().trim());
         if(commentRequest.getProject_id()!=null)
         {
+            isProject=true;
             Integer id=commentRequest.getProject_id();
             if(projectService.findProjectById(id).getId()!=null)
                 comment.setProjectId(commentRequest.getProject_id());
             else
-                comment.setProjectId(0);
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
 
-            //Map Open
-            Project project=projectService.getOneProjectById(comment.getProjectId());
-            project.setComment(comment);
-            projectService.saveProject(project);
-            //Map Close
+
         }
         else
         {
@@ -103,13 +105,9 @@ public class CommentController {
             if(sectionService.getSectionById(id).getId()!=null)
                 comment.setTaskId(commentRequest.getProject_id());
             else
-                comment.setTaskId(0);
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
 
-            //Map Open
-            Task task =taskDAO.getOne(comment.getTaskId());
-            task.setComment(comment);
-            taskDAO.save(task);
-            //Map Close
+
 
         }
 
@@ -146,6 +144,24 @@ public class CommentController {
         log.info("Comment ProjectId By comment Object is "+comment.getProjectId());
         commentService.saveComment(comment);
 
+
+        if(isProject)
+        {
+            //Map Open
+            Project project=projectService.getOneProjectById(comment.getProjectId());
+            project.getCommentList().add(comment);
+            projectService.saveProject(project);
+            //Map Close
+        }
+        else
+        {
+            //Map Open
+            Task task =taskDAO.getOne(comment.getTaskId());
+            task.setComment(comment);
+            taskDAO.save(task);
+            //Map Close
+        }
+
         CommentResponse commentResponse=new CommentResponse();
         commentResponse.setId(comment.getId());
         commentResponse.setContent(comment.getContent());
@@ -156,7 +172,13 @@ public class CommentController {
 
         commentResponse.setPosted(comment.getPosted());
         log.info("Comment Attachment By comment Object is "+comment.getAttachment());
-        commentResponse.setAttachment(comment.getAttachment());
+        Attachment attachment=comment.getAttachment();
+        AttachmentResponse attachmentResponse=new AttachmentResponse();
+        attachmentResponse.setFile_name(attachment.getFileName());
+        attachmentResponse.setFile_type(attachment.getFileType());
+        attachmentResponse.setFile_url(attachment.getFileUrl());
+        attachmentResponse.setResource_type(attachment.getResourceType());
+        commentResponse.setAttachment(attachmentResponse);
 
         return new ResponseEntity(commentResponse,HttpStatus.OK);
 

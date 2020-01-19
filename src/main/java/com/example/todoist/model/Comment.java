@@ -19,6 +19,7 @@ public class Comment {
 
     Integer taskId;
 
+    @Column(nullable = true)
     Integer projectId;
 
     String posted;

@@ -36,14 +36,15 @@ public class Project {
 
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "projectId1")
+    @JoinColumn(name = "projectId")
     List<Section> sectionList;
 
     @OneToMany
     List<Task> taskList;
 
-    @OneToOne
-    Comment comment;
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "projectId")
+    List<Comment> commentList;
 
 
     public Project(String name) {

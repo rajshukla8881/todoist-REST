@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,9 @@ public class Section {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-
+    @Column(nullable = true)
     int projectId;
+
 
     int sectionOrder;
 
