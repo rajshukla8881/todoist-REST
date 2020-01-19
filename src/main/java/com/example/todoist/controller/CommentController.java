@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
+@CrossOrigin
 @Slf4j
 @RestController
 @RequestMapping("/rest/v1")
