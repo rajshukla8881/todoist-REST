@@ -61,6 +61,12 @@ public class ProjectServiceImplementer implements ProjectService {
     }
 
     @Override
+    public int updateProject(Project project) {
+
+        return 0;
+    }
+
+    @Override
     public void deleteProject(Integer id) {
         projectRepository.deleteById(id);
     }

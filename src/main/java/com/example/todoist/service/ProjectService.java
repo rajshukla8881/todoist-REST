@@ -13,6 +13,8 @@ public interface ProjectService {
 
     ProjectResponse findProjectById(Integer id);
 
+    int updateProject(Project project);
+
     void deleteProject(Integer id);
 
     Project getOneProjectById(Integer id);

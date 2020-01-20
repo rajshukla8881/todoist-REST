@@ -56,7 +56,7 @@ public class ProjectController {
 
         ProjectResponse projectResponse=projectService.saveProject(project);
 
-        return new ResponseEntity<ProjectResponse>(HttpStatus.OK);
+        return new ResponseEntity<ProjectResponse>(projectResponse,HttpStatus.OK);
     }
 
     @GetMapping("/projects/{id}")
