@@ -9,7 +9,7 @@ public interface ProjectService {
 
     List<ProjectResponse> getAllProjects();
 
-    void saveProject(Project project);
+    ProjectResponse saveProject(Project project);
 
     ProjectResponse findProjectById(Integer id);
 

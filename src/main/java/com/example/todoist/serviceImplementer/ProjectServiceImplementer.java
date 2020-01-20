@@ -33,8 +33,15 @@ public class ProjectServiceImplementer implements ProjectService {
     }
 
     @Override
-    public void saveProject(Project project) {
+    public ProjectResponse saveProject(Project project) {
+        ProjectResponse projectResponse=new ProjectResponse();
+        projectResponse.setId(project.getId());
+        projectResponse.setName(project.getName());
+
+        projectResponse.setComment_count(project.getCommentCount());
+        projectResponse.setOrder(project.getProjectOrder());
         projectRepository.save(project);
+        return projectResponse;
     }
 
     @Override
