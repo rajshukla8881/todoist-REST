@@ -1,16 +1,16 @@
 package com.example.todoist.responseBean;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ProjectSectionTaskResponse {
+@Builder
+public class SectionTaskResponse {
     Integer id;
-    String name;
-    Integer comment_count;
+    Integer project_id;
     Integer order;
-    List<SectionTaskResponse> section;
+    String name;
     List<ActiveTaskResponse> task;
-
 }

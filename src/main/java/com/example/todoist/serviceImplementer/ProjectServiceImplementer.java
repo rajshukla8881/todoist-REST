@@ -4,12 +4,11 @@ import com.example.todoist.model.Project;
 import com.example.todoist.model.Section;
 import com.example.todoist.model.Task;
 import com.example.todoist.repository.ProjectRepository;
+import com.example.todoist.repository.SectionRepository;
 import com.example.todoist.repository.TaskDAO;
-import com.example.todoist.responseBean.ActiveTaskResponse;
-import com.example.todoist.responseBean.ProjectResponse;
-import com.example.todoist.responseBean.ProjectSectionTaskResponse;
-import com.example.todoist.responseBean.SectionResponse;
+import com.example.todoist.responseBean.*;
 import com.example.todoist.service.ProjectService;
+import com.example.todoist.service.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,9 @@ public class ProjectServiceImplementer implements ProjectService {
 
     @Autowired
     TaskDAO taskDAO;
+
+    @Autowired
+    SectionRepository sectionRepository;
 
     @Override
     public List<ProjectResponse> getAllProjects() {
@@ -56,7 +58,40 @@ public class ProjectServiceImplementer implements ProjectService {
             projectSectionTaskResponse.setName(project.getName());
             projectSectionTaskResponse.setComment_count(project.getCommentCount());
             projectSectionTaskResponse.setOrder(project.getProjectOrder());
-            List<Task> taskList=taskDAO.getTaskByProjectId(id);
+            List<Section> sectionList=sectionRepository.getSectionByProjectId(id);
+            List<SectionTaskResponse> sectionTaskResponseList=new ArrayList<>();
+            for(Section section:sectionList)
+            {
+                List<Task> taskList=taskDAO.getTaskBySectionIdAndProjectId(section.getId(),id);
+                List<ActiveTaskResponse> activeTaskResponseList=new ArrayList<>();
+                for(Task task:taskList) {
+                    ActiveTaskResponse activeTaskResponse = ActiveTaskResponse.builder()
+                            .id(task.getId())
+                            .project_id(task.getProjectId())
+                            .section_id(task.getSectionId())
+                            .content(task.getContent())
+                            .comment_count(task.getCommentCount())
+                            .order(task.getOrders())
+                            .priority(task.getPriority())
+                            .url(task.getUrl())
+                            .build();
+
+                    activeTaskResponseList.add(activeTaskResponse);
+                }
+
+                SectionTaskResponse sectionTaskResponse=SectionTaskResponse.builder()
+                        .id(section.getId())
+                        .project_id(section.getProjectId())
+                        .order(section.getSectionOrder())
+                        .name(section.getName())
+                        .task(activeTaskResponseList)
+                        .build();
+
+                sectionTaskResponseList.add(sectionTaskResponse);
+
+            }
+
+            List<Task> taskList=taskDAO.getTaskBySectionIdAndProjectId(0,id);
             List<ActiveTaskResponse> activeTaskRequestList = new ArrayList<>();
             for (Task task : taskList) {
 
@@ -72,6 +107,7 @@ public class ProjectServiceImplementer implements ProjectService {
                         .build();
                 activeTaskRequestList.add(activeTaskResponse);
             }
+            projectSectionTaskResponse.setSection(sectionTaskResponseList);
             projectSectionTaskResponse.setTask(activeTaskRequestList);
             return projectSectionTaskResponse;
         } else {

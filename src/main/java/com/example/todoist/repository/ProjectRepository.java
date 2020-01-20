@@ -2,6 +2,7 @@ package com.example.todoist.repository;
 
 import com.example.todoist.model.Due;
 import com.example.todoist.model.Project;
+import com.example.todoist.model.Section;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +28,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     @Override
     Project getOne(Integer integer);
+
+
 }
