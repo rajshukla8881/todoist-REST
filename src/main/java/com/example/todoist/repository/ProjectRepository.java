@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
-    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Due c WHERE c.id = :id")
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Project c WHERE c.id = :id")
     boolean existsById(@Param("id") int id);
 
     @Override
