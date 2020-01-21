@@ -17,11 +17,8 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
-    boolean checkValidProjectName(String projectName) {
-        if (projectName == null || projectName.trim().length() == 0) {
-            return false;
-        }
-        return true;
+    boolean checkInValidProjectName(String projectName) {
+        return projectName == null || projectName.trim().length() == 0;
     }
 
     @GetMapping("/projects")
@@ -35,7 +32,7 @@ public class ProjectController {
     private ResponseEntity<?> addProject(@RequestBody ProjectRequest projectRequest) {
 
         //Check if the Project Name is Valid or Not
-        if (!checkValidProjectName(projectRequest.getName())) {
+        if (checkInValidProjectName(projectRequest.getName())) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
@@ -68,7 +65,7 @@ public class ProjectController {
     private ResponseEntity updateProject(@PathVariable("id") Integer id, @RequestBody ProjectRequest projectRequest) {
 
         //Check if the Project Name is Valid or Not
-        if (!checkValidProjectName(projectRequest.getName())) {
+        if (checkInValidProjectName(projectRequest.getName())) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
