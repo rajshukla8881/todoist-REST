@@ -24,4 +24,9 @@ public interface SectionRepository extends JpaRepository<Section,Integer> {
 
     @Override
     Section getOne(Integer integer);
+
+    List<Section> getSectionByProjectId(Integer id);
+
+
+
 }
