@@ -1,6 +1,7 @@
 package com.example.todoist.controller;
 
 import com.example.todoist.model.Project;
+import com.example.todoist.responseBean.ProjectSectionTaskResponse;
 import com.example.todoist.service.ProjectService;
 import com.example.todoist.requestBean.ProjectRequest;
 import com.example.todoist.responseBean.ProjectResponse;
@@ -61,10 +62,10 @@ public class ProjectController {
 
     @GetMapping("/projects/{id}")
     @ResponseBody
-    public ResponseEntity<ProjectResponse> getProject(@PathVariable("id")Integer id)
+    public ResponseEntity<ProjectSectionTaskResponse> getProject(@PathVariable("id")Integer id)
     {
         if(projectService.findProjectById(id).getId()!=null)
-        return new ResponseEntity<ProjectResponse>(projectService.findProjectById(id),HttpStatus.OK);
+        return new ResponseEntity<ProjectSectionTaskResponse>(projectService.findProjectById(id),HttpStatus.OK);
         else
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
