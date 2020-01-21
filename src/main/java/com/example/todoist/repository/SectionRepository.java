@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface SectionRepository extends JpaRepository<Section,Integer> {
 
-    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Due c WHERE c.id = :id")
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Section c WHERE c.id = :id")
     boolean existsById(@Param("id") int id);
 
     @Override
