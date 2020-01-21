@@ -74,11 +74,7 @@ public class TaskServiceImpl implements TaskService {
         else
             task.setProjectId(0);
 
-        //Adding Task To Particular Project - MAP Open
-        Project project=projectRepository.getOne(task.getProjectId());
-        project.getTaskList().add(task);
-        projectRepository.save(project);
-        //Map Close
+
 
 
 
@@ -87,12 +83,6 @@ public class TaskServiceImpl implements TaskService {
             task.setSectionId(taskRequest.getSectionId());
         else
             task.setSectionId(0);
-
-        //Adding Task To Particular Section - MAP Open
-        Section section =sectionRepository.getOne(task.getSectionId());
-        section.getTaskList().add(task);
-        sectionRepository.save(section);
-        //Map Close
 
         task.setCompleted(taskRequest.getCompleted());
         task.setParent(taskRequest.getParent());

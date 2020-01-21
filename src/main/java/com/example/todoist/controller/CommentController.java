@@ -146,22 +146,6 @@ public class CommentController {
         commentService.saveComment(comment);
 
 
-        if(isProject)
-        {
-            //Map Open
-            Project project=projectService.getOneProjectById(comment.getProjectId());
-            project.getCommentList().add(comment);
-            projectService.saveProject(project);
-            //Map Close
-        }
-        else
-        {
-            //Map Open
-            Task task =taskDAO.getOne(comment.getTaskId());
-            task.setComment(comment);
-            taskDAO.save(task);
-            //Map Close
-        }
 
         CommentResponse commentResponse=new CommentResponse();
         commentResponse.setId(comment.getId());
