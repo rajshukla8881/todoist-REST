@@ -1,5 +1,6 @@
 package com.example.todoist.requestBean;
 
+import com.example.todoist.model.Attachment;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,5 +10,5 @@ public class CommentRequest {
     Integer task_id;
     Integer project_id;
     String content;
-    Object attachment;
+    AttachmentRequest attachment;
 }

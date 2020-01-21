@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -11,17 +14,22 @@ import javax.persistence.*;
 public class Section {
 
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-
+    @Column(nullable = true)
     int projectId;
+
 
     int sectionOrder;
 
     @Column(columnDefinition = "TEXT")
     String name;
+
+
+
 
 
 
@@ -36,4 +44,7 @@ public class Section {
         this.projectId=project_id;
         this.sectionOrder=order;
     }
+
+    @OneToMany
+    List<Task> taskList;
 }

@@ -2,12 +2,14 @@ package com.example.todoist.model;
 
 
 
+
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -31,6 +33,11 @@ public class Project {
 
 
     int commentCount;
+
+
+
+
+
 
 
 

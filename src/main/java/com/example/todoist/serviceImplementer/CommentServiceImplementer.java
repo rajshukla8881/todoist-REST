@@ -1,10 +1,10 @@
 package com.example.todoist.serviceImplementer;
 
+import com.example.todoist.model.Attachment;
 import com.example.todoist.model.Comment;
 import com.example.todoist.model.Section;
 import com.example.todoist.repository.CommentRepository;
-import com.example.todoist.responseBean.CommentResponse;
-import com.example.todoist.responseBean.SectionResponse;
+import com.example.todoist.responseBean.*;
 import com.example.todoist.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,19 +20,26 @@ public class CommentServiceImplementer implements CommentService {
     CommentRepository commentRepository;
 
     @Override
-    public List<CommentResponse> getAllCommentByProjectId(Integer id) {
+    public List<CommentResponseProject> getAllCommentByProjectId(Integer id) {
         List<Comment> commentList=commentRepository.findAllByProjectId(id);
-        List<CommentResponse> commentResponseList=new ArrayList<>();
+        List<CommentResponseProject> commentResponseList=new ArrayList<>();
         for(Comment commentListIterator:commentList)
         {
-            CommentResponse commentResponse=new CommentResponse();
-            commentResponse.setId(commentListIterator.getId());
-            commentResponse.setProject_id(commentListIterator.getProjectId());
-            commentResponse.setContent(commentListIterator.getContent());
-            commentResponse.setPosted(commentListIterator.getPosted());
-            commentResponse.setAttachment(commentListIterator.getAttachment());
-
-            commentResponseList.add(commentResponse);
+            CommentResponseProject commentResponseProject=new CommentResponseProject();
+            commentResponseProject.setId(commentListIterator.getId());
+            commentResponseProject.setProject_id(commentListIterator.getProjectId());
+            commentResponseProject.setContent(commentListIterator.getContent());
+            commentResponseProject.setPosted(commentListIterator.getPosted());
+            if(commentListIterator.getAttachment()!=null) {
+                Attachment attachment = commentListIterator.getAttachment();
+                AttachmentResponse attachmentResponse = new AttachmentResponse();
+                attachmentResponse.setFile_name(attachment.getFileName());
+                attachmentResponse.setFile_type(attachment.getFileType());
+                attachmentResponse.setFile_url(attachment.getFileUrl());
+                attachmentResponse.setResource_type(attachment.getResourceType());
+                commentResponseProject.setAttachment(attachmentResponse);
+            }
+            commentResponseList.add(commentResponseProject);
 
         }
 
@@ -41,18 +48,25 @@ public class CommentServiceImplementer implements CommentService {
     }
 
     @Override
-    public List<CommentResponse> getAllCommentByTaskId(Integer id) {
+    public List<CommentResponseTask> getAllCommentByTaskId(Integer id) {
         List<Comment> commentList=commentRepository.findAllByTaskId(id);
-        List<CommentResponse> commentResponseList=new ArrayList<>();
+        List<CommentResponseTask> commentResponseList=new ArrayList<>();
         for(Comment commentListIterator:commentList)
         {
-            CommentResponse commentResponse=new CommentResponse();
+            CommentResponseTask commentResponse=new CommentResponseTask();
             commentResponse.setId(commentListIterator.getId());
             commentResponse.setTask_id(commentListIterator.getTaskId());
             commentResponse.setContent(commentListIterator.getContent());
             commentResponse.setPosted(commentListIterator.getPosted());
-            commentResponse.setAttachment(commentListIterator.getAttachment());
-
+            if(commentListIterator.getAttachment()!=null) {
+                Attachment attachment = commentListIterator.getAttachment();
+                AttachmentResponse attachmentResponse = new AttachmentResponse();
+                attachmentResponse.setFile_name(attachment.getFileName());
+                attachmentResponse.setFile_type(attachment.getFileType());
+                attachmentResponse.setFile_url(attachment.getFileUrl());
+                attachmentResponse.setResource_type(attachment.getResourceType());
+                commentResponse.setAttachment(attachmentResponse);
+            }
             commentResponseList.add(commentResponse);
 
         }
@@ -66,6 +80,7 @@ public class CommentServiceImplementer implements CommentService {
     }
 
     @Override
+
     public CommentResponse getCommentById(Integer id) {
         Optional<Comment> commentOptional=commentRepository.findById(id);
         if(commentOptional.isPresent())
@@ -80,7 +95,15 @@ public class CommentServiceImplementer implements CommentService {
                 commentResponse.setTask_id(comment.getProjectId());
 
             commentResponse.setPosted(comment.getPosted());
-            commentResponse.setAttachment(comment.getAttachment());
+            if(comment.getAttachment()!=null) {
+                Attachment attachment = comment.getAttachment();
+                AttachmentResponse attachmentResponse = new AttachmentResponse();
+                attachmentResponse.setFile_name(attachment.getFileName());
+                attachmentResponse.setFile_type(attachment.getFileType());
+                attachmentResponse.setFile_url(attachment.getFileUrl());
+                attachmentResponse.setResource_type(attachment.getResourceType());
+                commentResponse.setAttachment(attachmentResponse);
+            }
 
             return commentResponse;
         }
@@ -95,7 +118,7 @@ public class CommentServiceImplementer implements CommentService {
     public void deleteCommentById(Integer id) {
         commentRepository.deleteById(id);
     }
-
+  
     @Override
     public Comment getOneCommentById(Integer id) {
         return commentRepository.getOne(id);

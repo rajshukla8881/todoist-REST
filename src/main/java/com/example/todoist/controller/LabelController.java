@@ -8,13 +8,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/v1")
 public class LabelController {
 
     @Autowired
     LabelService labelService;
+
+    boolean checkValidLabelName(String labelName)
+    {
+        if(labelName==null || labelName.trim().length()==0)
+        {
+            return false;
+        }
+        return true;
+    }
 
     @GetMapping("/labels")
     @ResponseBody
@@ -27,7 +36,12 @@ public class LabelController {
     @ResponseBody
     private ResponseEntity createNewLabel(@RequestBody LabelRequest labelRequest)
     {
-        Label label=new Label(labelRequest.getName());
+        if(!checkValidLabelName(labelRequest.getName()))
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Label label=new Label(labelRequest.getName().trim());
         labelService.saveLabel(label);
         return new ResponseEntity(label,HttpStatus.OK);
     }
@@ -36,17 +50,29 @@ public class LabelController {
     @ResponseBody
     private ResponseEntity getSingleLabel(@PathVariable("id")Integer id)
     {
-        return new ResponseEntity(labelService.getLabelById(id),HttpStatus.OK);
+        if(labelService.getLabelById(id).getId()!=null)
+            return new ResponseEntity(labelService.getLabelById(id),HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/labels/{id}")
     private ResponseEntity updateLabel(@PathVariable("id")Integer id,@RequestBody LabelRequest labelRequest)
     {
+        if(!checkValidLabelName(labelRequest.getName()))
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
 
-        Label label=labelService.getOneLabelById(id);
-        label.setName(labelRequest.getName());
-        labelService.saveLabel(label);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if(labelService.getLabelById(id).getId()!=null) {
+            Label label = labelService.getOneLabelById(id);
+            label.setName(labelRequest.getName());
+            labelService.saveLabel(label);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
 
     }
 
@@ -54,9 +80,13 @@ public class LabelController {
     @DeleteMapping("/labels/{id}")
     private ResponseEntity deleteLabel(@PathVariable("id")Integer id)
     {
-
-        labelService.deleteLabelById(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if(labelService.getLabelById(id).getId()!=null) {
+            labelService.deleteLabelById(id);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
 
     }
 

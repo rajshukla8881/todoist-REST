@@ -8,9 +8,13 @@ import java.util.List;
 public interface SectionService {
 
     List<SectionResponse> getAllSections();
-    void  saveSection(Section section);
+
+    void saveSection(Section section);
+
     SectionResponse getSectionById(Integer id);
+
     void deleteSectionById(Integer id);
+
     Section getOneSectionById(Integer id);
 
 }

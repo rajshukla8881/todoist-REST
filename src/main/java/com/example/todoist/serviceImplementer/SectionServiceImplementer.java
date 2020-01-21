@@ -11,21 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class SectionServiceImplementer implements SectionService {
-
 
     @Autowired
     SectionRepository sectionRepository;
 
     @Override
     public List<SectionResponse> getAllSections() {
-        List<Section> sectionList=sectionRepository.findAll();
-        List<SectionResponse> sectionResponseList=new ArrayList<>();
-        for(Section sectionListIterator:sectionList)
-        {
-            SectionResponse sectionResponse=new SectionResponse();
+        List<Section> sectionList = sectionRepository.findAll();
+        List<SectionResponse> sectionResponseList = new ArrayList<>();
+        for (Section sectionListIterator : sectionList) {
+            SectionResponse sectionResponse = new SectionResponse();
             sectionResponse.setId(sectionListIterator.getId());
             sectionResponse.setProject_id(sectionListIterator.getProjectId());
             sectionResponse.setOrder(sectionListIterator.getSectionOrder());
@@ -33,7 +30,6 @@ public class SectionServiceImplementer implements SectionService {
             sectionResponseList.add(sectionResponse);
 
         }
-
         return sectionResponseList;
     }
 
@@ -44,20 +40,16 @@ public class SectionServiceImplementer implements SectionService {
 
     @Override
     public SectionResponse getSectionById(Integer id) {
-        Optional<Section> sectionOptional=sectionRepository.findById(id);
-        if(sectionOptional.isPresent())
-        {
-            Section section=sectionOptional.get();
-            SectionResponse sectionResponse=new SectionResponse();
+        Optional<Section> sectionOptional = sectionRepository.findById(id);
+        if (sectionOptional.isPresent()) {
+            Section section = sectionOptional.get();
+            SectionResponse sectionResponse = new SectionResponse();
             sectionResponse.setId(section.getId());
             sectionResponse.setProject_id(section.getProjectId());
             sectionResponse.setOrder(section.getSectionOrder());
             sectionResponse.setName(section.getName());
-
             return sectionResponse;
-        }
-        else
-        {
+        } else {
             return new SectionResponse();
         }
     }
