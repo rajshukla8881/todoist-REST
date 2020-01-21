@@ -8,8 +8,5 @@ import java.util.List;
 public interface TaskDAO extends JpaRepository<Task, Integer> {
     //List<Task> getTaskByProjectId(Integer id);
 
-    List<Task> getTaskBySectionIdAndProjectId(Integer sectionId,Integer projectId);
-
-
-
+    List<Task> getTaskBySectionIdAndProjectId(Integer sectionId, Integer projectId);
 }

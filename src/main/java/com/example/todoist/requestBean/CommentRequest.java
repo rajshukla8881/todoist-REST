@@ -1,6 +1,5 @@
 package com.example.todoist.requestBean;
 
-import com.example.todoist.model.Attachment;
 import lombok.Builder;
 import lombok.Data;
 

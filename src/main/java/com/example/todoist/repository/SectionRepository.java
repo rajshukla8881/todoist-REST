@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface SectionRepository extends JpaRepository<Section,Integer> {
+public interface SectionRepository extends JpaRepository<Section, Integer> {
 
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Section c WHERE c.id = :id")
     boolean existsById(@Param("id") int id);
@@ -26,7 +26,4 @@ public interface SectionRepository extends JpaRepository<Section,Integer> {
     Section getOne(Integer integer);
 
     List<Section> getSectionByProjectId(Integer id);
-
-
-
 }

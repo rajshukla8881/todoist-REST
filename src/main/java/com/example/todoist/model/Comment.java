@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Data
@@ -15,7 +14,6 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-
 
     Integer taskId;
 
@@ -28,6 +26,4 @@ public class Comment {
 
     @OneToOne
     Attachment attachment;
-
-
 }
