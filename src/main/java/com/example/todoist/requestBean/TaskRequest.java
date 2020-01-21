@@ -45,7 +45,7 @@ public class TaskRequest {
     private DueRequest due;
 
     //@Value("null")
-    private String url;
+    private String url="qwe";
 
     @Value("0")
     private int commentCount;
