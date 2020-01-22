@@ -51,7 +51,12 @@ public class SectionController {
         String serviceRequestName = serviceRequest.getName().trim();
 
         if (serviceRequest.getOrder() == null) {
-            section = new Section(serviceRequestName, serviceRequest.getProject_id());
+
+            Integer id = serviceRequest.getProject_id();
+            if (projectRepository.existsById(id))
+                section = new Section(serviceRequestName, serviceRequest.getProject_id());
+            else
+                section = new Section(serviceRequestName, 0);
         } else {
             Integer id = serviceRequest.getProject_id();
             if (projectRepository.existsById(id))
