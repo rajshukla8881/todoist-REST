@@ -31,16 +31,15 @@ public class Task implements Serializable {
     private String content;
 
     @Column(nullable = false)
-    private Boolean completed;
+    private boolean completed;
 
     @ManyToMany
+    @Column(name = "label_ids")
     private List<Label> labelList;
 
     private int parent;
 
-    private Integer orders;
-
-    private int indent;
+    private int orders; //order is some keyword in sql so unable to create the table with it.
 
     private int priority;
 
