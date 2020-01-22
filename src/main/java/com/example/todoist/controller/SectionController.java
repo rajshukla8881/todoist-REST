@@ -32,6 +32,14 @@ public class SectionController {
         return true;
     }
 
+
+    boolean checkValidSectionInputName(String sectionName) {
+        if (sectionName == null || sectionName.trim().length() == 0 ) {
+            return false;
+        }
+        return true;
+    }
+
     @GetMapping("/sections")
     @ResponseBody
     private ResponseEntity getAllSections() {
@@ -84,7 +92,7 @@ public class SectionController {
 
     @PostMapping("/sections/{id}")
     private ResponseEntity updateSection(@PathVariable("id") Integer id, @RequestBody ServiceRequest serviceRequest) {
-        if (!checkValidSectionInput(serviceRequest.getName(), serviceRequest.getProject_id())) {
+        if (!checkValidSectionInputName(serviceRequest.getName())) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
