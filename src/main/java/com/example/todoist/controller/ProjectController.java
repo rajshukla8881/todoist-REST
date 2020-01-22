@@ -39,7 +39,7 @@ public class ProjectController {
         Project project;
 
         if (projectRequest.getParent() == null)
-            project = new Project(projectRequest.getName());
+            project = new Project(projectRequest.getName().trim());
         else
             project = new Project(projectRequest.getName().trim(), projectRequest.getParent());
 
