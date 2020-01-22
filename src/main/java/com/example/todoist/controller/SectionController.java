@@ -1,6 +1,7 @@
 package com.example.todoist.controller;
 
 import com.example.todoist.model.Section;
+import com.example.todoist.repository.ProjectRepository;
 import com.example.todoist.requestBean.ServiceRequest;
 import com.example.todoist.responseBean.SectionResponse;
 import com.example.todoist.service.ProjectService;
@@ -20,6 +21,9 @@ public class SectionController {
 
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    ProjectRepository projectRepository;
 
     boolean checkValidSectionInput(String sectionName, Integer projectId) {
         if (sectionName == null || sectionName.trim().length() == 0 || projectId == null) {
@@ -50,7 +54,7 @@ public class SectionController {
             section = new Section(serviceRequestName, serviceRequest.getProject_id());
         } else {
             Integer id = serviceRequest.getProject_id();
-            if (projectService.findProjectById(id).getId() != null)
+            if (projectRepository.existsById(id))
                 section = new Section(serviceRequestName, serviceRequest.getProject_id(), serviceRequest.getOrder());
             else
                 section = new Section(serviceRequestName, 0, serviceRequest.getOrder());
