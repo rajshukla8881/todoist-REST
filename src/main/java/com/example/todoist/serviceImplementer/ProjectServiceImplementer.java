@@ -5,7 +5,8 @@ import com.example.todoist.model.Section;
 import com.example.todoist.model.Task;
 import com.example.todoist.repository.ProjectRepository;
 import com.example.todoist.repository.SectionRepository;
-import com.example.todoist.repository.TaskDAO;
+
+import com.example.todoist.repository.TaskRepository;
 import com.example.todoist.responseBean.ActiveTaskResponse;
 import com.example.todoist.responseBean.ProjectResponse;
 import com.example.todoist.responseBean.ProjectSectionTaskResponse;
@@ -25,7 +26,7 @@ public class ProjectServiceImplementer implements ProjectService {
     ProjectRepository projectRepository;
 
     @Autowired
-    TaskDAO taskDAO;
+    TaskRepository taskDAO;
 
     @Autowired
     SectionRepository sectionRepository;
