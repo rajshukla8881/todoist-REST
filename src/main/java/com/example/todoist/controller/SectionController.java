@@ -98,11 +98,8 @@ public class SectionController {
 
         if (sectionService.getSectionById(id).getId() != null) {
             Section section = sectionService.getOneSectionById(id);
-            SectionResponse sectionResponse = new SectionResponse();
-            sectionResponse.setId(section.getId());
-            sectionResponse.setProject_id(section.getProjectId());
-            sectionResponse.setOrder(section.getSectionOrder());
-            sectionResponse.setName(section.getName().trim());
+            section.setName(serviceRequest.getName().trim());
+            sectionService.saveSection(section);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
