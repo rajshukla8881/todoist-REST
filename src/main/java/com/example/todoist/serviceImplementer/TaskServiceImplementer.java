@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,35 +39,29 @@ public class TaskServiceImplementer implements TaskService {
     SectionRepository sectionRepository;
 
     @Override
-    public List<CreateTaskResponse> getActiveTasks() {
-        List<CreateTaskResponse> createTaskRequestList = new ArrayList<>();
+    public List<ActiveTaskResponse> getActiveTasks() {
+        List<ActiveTaskResponse> activeTaskRequestList = new ArrayList<>();
+
         List<Task> taskList = taskRepository.findAll();
-        for (Task saveTask : taskList) {
-            if (saveTask.isCompleted() == false) {
-                DueRequest dueRequest = new DueRequest();
-                if (saveTask.getDue() != null) {
-                    dueRequest.setDate(saveTask.getDue().getDate());
-                    dueRequest.setDatetime(saveTask.getDue().getDatetime());
-                    dueRequest.setString(saveTask.getDue().getString());
-                    dueRequest.setTimezone(saveTask.getDue().getTimezone());
-                }
-                CreateTaskResponse createTaskResponse = CreateTaskResponse.builder()
-                        .comment_count(saveTask.getCommentCount())
-                        .completed(saveTask.isCompleted())
-                        .content(saveTask.getContent())
-                        .due(dueRequest)
-                        .id(saveTask.getId())
-                        .order(saveTask.getOrders())
-                        .priority(saveTask.getPriority())
-                        .project_id(saveTask.getProjectId())
-                        .section_id(saveTask.getSectionId())
-                        .url(saveTask.getUrl())
+        for (Task task : taskList) {
+            if (task.isCompleted() == false) {
+                ActiveTaskResponse activeTaskResponse = ActiveTaskResponse.builder()
+                        .id(task.getId())
+                        .project_id(task.getProjectId())
+                        .section_id(task.getSectionId())
+                        .content(task.getContent())
+                        .comment_count(task.getComment_count())
+                        .order(task.getOrders())
+                        .priority(task.getPriority())
+                        .url(task.getUrl())
                         .build();
-                createTaskRequestList.add(createTaskResponse);
+                activeTaskRequestList.add(activeTaskResponse);
             }
         }
-        return createTaskRequestList;
+        return activeTaskRequestList;
     }
+
+
 
 
     @Override
@@ -92,7 +88,7 @@ public class TaskServiceImplementer implements TaskService {
         task.setOrders(taskRequest.getOrder());
         task.setPriority(taskRequest.getPriority());
         task.setUrl("https://todoistrest.herokuapp.com/rest/v1/tasks/" + task.getId());
-        task.setCommentCount(taskRequest.getComment_count());
+        task.setComment_count(taskRequest.getComment_count());
         Due due = null;
         if (taskRequest.getDue() != null && dueRepository.existsByString(taskRequest.getDue().getString())) {
             due = dueRepository.findDueByString(taskRequest.getDue().getString());
@@ -129,7 +125,7 @@ public class TaskServiceImplementer implements TaskService {
             dueRequest.setTimezone(saveTask.getDue().getTimezone());
         }
         CreateTaskResponse createTaskResponse = CreateTaskResponse.builder()
-                .comment_count(saveTask.getCommentCount())
+                .comment_count(saveTask.getComment_count())
                 .completed(saveTask.isCompleted())
                 .content(saveTask.getContent())
                 .due(dueRequest)
@@ -157,7 +153,7 @@ public class TaskServiceImplementer implements TaskService {
                 dueRequest.setTimezone(task.getDue().getTimezone());
             }
             CreateTaskResponse createTaskResponse = CreateTaskResponse.builder()
-                    .comment_count(task.getCommentCount())
+                    .comment_count(task.getComment_count())
                     .completed(task.isCompleted())
                     .content(task.getContent())
                     .due(dueRequest)
@@ -198,7 +194,7 @@ public class TaskServiceImplementer implements TaskService {
             task.setParent(taskRequest.getParent());
             task.setOrders(taskRequest.getOrder());
             task.setPriority(taskRequest.getPriority());
-            task.setCommentCount(taskRequest.getComment_count());
+            task.setComment_count(taskRequest.getComment_count());
             Due due = null;
             if (!(taskRequest.getDue() == null) && dueRepository.existsByString(taskRequest.getDue().getString())) {
                 due = dueRepository.findDueByString(taskRequest.getDue().getString());

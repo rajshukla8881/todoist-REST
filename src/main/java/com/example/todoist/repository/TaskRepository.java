@@ -11,5 +11,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     //List<Task> getTaskByProjectId(Integer id);
 //    List<Task> getTasklistByUsername(String username);
 
-    List<Task> getTaskBySectionIdAndProjectId(Integer sectionId, Integer projectId);
+
+    List<Task> getTaskBySectionIdAndProjectId(Integer sectionId,Integer projectId);
 }

@@ -22,8 +22,9 @@ public class TaskController {
     TaskService taskService;
 
     @GetMapping("/tasks")
+
     @ResponseBody
-    public ResponseEntity<List<CreateTaskResponse>> getActiveTaskList() {
+    public ResponseEntity<List<ActiveTaskResponse>> getActiveTaskList() {
         return new ResponseEntity<>(taskService.getActiveTasks(), HttpStatus.OK);
     }
 

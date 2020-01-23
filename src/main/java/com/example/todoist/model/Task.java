@@ -16,39 +16,28 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class Task implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column(nullable = false)
     private int projectId;
-
     @Column(nullable = false)
     private int sectionId;
-
     @Column(nullable = false)
     private String content;
-
     @Column(nullable = false)
     private boolean completed;
-
     @ManyToMany
     @Column(name = "label_ids")
     private List<Label> labelList;
 
     private int parent;
-
     private int orders; //order is some keyword in sql so unable to create the table with it.
-
     private int priority;
-
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     private Due due;
-
     @Column(nullable = true)
     private String url;
-
     @Column(nullable = true)
-    private int commentCount;
+    private int comment_count;
 }
