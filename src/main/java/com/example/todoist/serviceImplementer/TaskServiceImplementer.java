@@ -37,25 +37,34 @@ public class TaskServiceImplementer implements TaskService {
     SectionRepository sectionRepository;
 
     @Override
-    public List<ActiveTaskResponse> getActiveTasks() {
-        List<ActiveTaskResponse> activeTaskRequestList = new ArrayList<>();
+    public List<CreateTaskResponse> getActiveTasks() {
+        List<CreateTaskResponse> createTaskRequestList = new ArrayList<>();
         List<Task> taskList = taskRepository.findAll();
-        for (Task task : taskList) {
-            if (task.isCompleted() == false) {
-                ActiveTaskResponse activeTaskResponse = ActiveTaskResponse.builder()
-                        .id(task.getId())
-                        .project_id(task.getProjectId())
-                        .section_id(task.getSectionId())
-                        .content(task.getContent())
-                        .comment_count(task.getCommentCount())
-                        .order(task.getOrders())
-                        .priority(task.getPriority())
-                        .url(task.getUrl())
+        for (Task saveTask : taskList) {
+            if (saveTask.isCompleted() == false) {
+                DueRequest dueRequest = new DueRequest();
+                if (saveTask.getDue() != null) {
+                    dueRequest.setDate(saveTask.getDue().getDate());
+                    dueRequest.setDatetime(saveTask.getDue().getDatetime());
+                    dueRequest.setString(saveTask.getDue().getString());
+                    dueRequest.setTimezone(saveTask.getDue().getTimezone());
+                }
+                CreateTaskResponse createTaskResponse = CreateTaskResponse.builder()
+                        .comment_count(saveTask.getCommentCount())
+                        .completed(saveTask.isCompleted())
+                        .content(saveTask.getContent())
+                        .due(dueRequest)
+                        .id(saveTask.getId())
+                        .order(saveTask.getOrders())
+                        .priority(saveTask.getPriority())
+                        .project_id(saveTask.getProjectId())
+                        .section_id(saveTask.getSectionId())
+                        .url(saveTask.getUrl())
                         .build();
-                activeTaskRequestList.add(activeTaskResponse);
+                createTaskRequestList.add(createTaskResponse);
             }
         }
-        return activeTaskRequestList;
+        return createTaskRequestList;
     }
 
 
