@@ -19,9 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @CrossOrigin
-@Slf4j
 @RestController
 @RequestMapping("/rest/v1")
+@Slf4j
 public class CommentController {
 
     @Autowired
