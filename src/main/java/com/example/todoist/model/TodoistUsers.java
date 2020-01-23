@@ -9,13 +9,16 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Attachment {
+public class TodoistUsers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    String resourceType;
-    String fileUrl;
-    String fileType;
-    String fileName;
+
+    String userName;
+
+    String email;
+
+    String password;
+
 
 }

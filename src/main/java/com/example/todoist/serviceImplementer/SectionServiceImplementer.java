@@ -28,7 +28,6 @@ public class SectionServiceImplementer implements SectionService {
             sectionResponse.setOrder(sectionListIterator.getSectionOrder());
             sectionResponse.setName(sectionListIterator.getName());
             sectionResponseList.add(sectionResponse);
-
         }
         return sectionResponseList;
     }

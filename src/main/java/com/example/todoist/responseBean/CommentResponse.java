@@ -10,5 +10,5 @@ public class CommentResponse {
     Integer project_id;
     String content;
     String posted;
-    AttachmentResponse attachment;
+    Attachment attachment;
 }

@@ -1,17 +1,13 @@
 package com.example.todoist.controller;
 
 import com.example.todoist.model.Project;
-import com.example.todoist.responseBean.ProjectSectionTaskResponse;
-import com.example.todoist.service.ProjectService;
 import com.example.todoist.requestBean.ProjectRequest;
 import com.example.todoist.responseBean.ProjectResponse;
+import com.example.todoist.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 
 @CrossOrigin
 @RestController
@@ -21,101 +17,75 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
-
-    boolean checkValidProjectName(String projectName)
-    {
-        return projectName != null && projectName.trim().length() != 0;
+    boolean checkInValidProjectName(String projectName) {
+        return projectName == null || projectName.trim().length() == 0;
     }
 
     @GetMapping("/projects")
     @ResponseBody
-    public ResponseEntity<List<ProjectResponse>> getAllProjects()
-    {
-        return new ResponseEntity<List<ProjectResponse>>(projectService.getAllProjects(), HttpStatus.OK);
-
+    private ResponseEntity getAllProjects() {
+        return new ResponseEntity(projectService.getAllProjects(), HttpStatus.OK);
     }
-
 
     @PostMapping("/projects")
     @ResponseBody
-    public ResponseEntity<ProjectResponse> addProject(@RequestBody ProjectRequest projectRequest)
-    {
+    private ResponseEntity<?> addProject(@RequestBody ProjectRequest projectRequest) {
 
         //Check if the Project Name is Valid or Not
-        if(!checkValidProjectName(projectRequest.getName()))
-        {
+        if (checkInValidProjectName(projectRequest.getName())) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
         Project project;
 
-        if(projectRequest.getParent()==null)
-            project = new Project(projectRequest.getName());
+        if (projectRequest.getParent() == null)
+            project = new Project(projectRequest.getName().trim());
         else
-            project=new Project(projectRequest.getName().trim(),projectRequest.getParent());
+            project = new Project(projectRequest.getName().trim(), projectRequest.getParent());
 
+        projectService.saveProject(project);
+        ProjectResponse projectResponse = new ProjectResponse();
+        projectResponse.setId(project.getId());
+        projectResponse.setName(project.getName());
 
-        ProjectResponse projectResponse=projectService.saveProject(project);
-
-        return new ResponseEntity<ProjectResponse>(projectResponse,HttpStatus.OK);
+        projectResponse.setComment_count(project.getCommentCount());
+        projectResponse.setOrder(project.getProjectOrder());
+        return ResponseEntity.ok(projectResponse);
     }
 
     @GetMapping("/projects/{id}")
-    @ResponseBody
-    public ResponseEntity<ProjectSectionTaskResponse> getProject(@PathVariable("id")Integer id)
-    {
-        if(projectService.findProjectById(id).getId()!=null)
-        return new ResponseEntity<ProjectSectionTaskResponse>(projectService.findProjectById(id),HttpStatus.OK);
+    private ResponseEntity getProject(@PathVariable("id") Integer id) {
+        if (projectService.findProjectById(id).getId() != null)
+            return ResponseEntity.ok(projectService.findProjectById(id));
         else
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/projects/{id}")
-    @ResponseBody
-    public ResponseEntity<String> updateProject(@PathVariable("id")Integer id,@RequestBody ProjectRequest projectRequest)
-    {
+    private ResponseEntity updateProject(@PathVariable("id") Integer id, @RequestBody ProjectRequest projectRequest) {
 
         //Check if the Project Name is Valid or Not
-        if(!checkValidProjectName(projectRequest.getName()))
-        {
+        if (checkInValidProjectName(projectRequest.getName())) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(projectService.findProjectById(id).getId()!=null)
-        {
+        if (projectService.findProjectById(id).getId() != null) {
             Project project = projectService.getOneProjectById(id);
             project.setName(projectRequest.getName().trim());
             projectService.saveProject(project);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        else
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
     }
-
 
     @DeleteMapping("projects/{id}")
-    @ResponseBody
-    public ResponseEntity<String> deleteProject(@PathVariable("id")Integer id)
-    {
-        if(projectService.findProjectById(id).getId()!=null)
-        {
+    private ResponseEntity deleteProject(@PathVariable("id") Integer id) {
+        if (projectService.findProjectById(id).getId() != null) {
             projectService.deleteProject(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
-
-
-
-
-
 }

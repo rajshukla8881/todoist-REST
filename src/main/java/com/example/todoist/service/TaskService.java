@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    List<ActiveTaskResponse> getActiveTasks();
+    List<CreateTaskResponse> getActiveTasks();
 
     CreateTaskResponse createTask(TaskRequest taskRequest);
 

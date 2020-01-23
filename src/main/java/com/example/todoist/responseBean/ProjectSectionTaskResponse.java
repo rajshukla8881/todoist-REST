@@ -12,5 +12,4 @@ public class ProjectSectionTaskResponse {
     Integer order;
     List<SectionTaskResponse> section;
     List<ActiveTaskResponse> task;
-
 }
