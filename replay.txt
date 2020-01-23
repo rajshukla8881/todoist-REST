@@ -1,0 +1,865 @@
+diff --git a/pom.xml b/pom.xml
+new file mode 100644
+index 0000000..c58d6c2
+--- /dev/null
++++ b/pom.xml
+@@ -0,0 +1,65 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++    <parent>
++        <groupId>org.springframework.boot</groupId>
++        <artifactId>spring-boot-starter-parent</artifactId>
++        <version>2.2.2.RELEASE</version>
++        <relativePath/> <!-- lookup parent from repository -->
++    </parent>
++    <groupId>com.todoist</groupId>
++    <artifactId>todoistapp</artifactId>
++    <version>0.0.1-SNAPSHOT</version>
++    <name>todoistapp</name>
++    <description>Todoist Application</description>
++
++    <properties>
++        <java.version>1.8</java.version>
++    </properties>
++
++    <dependencies>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-security</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.projectlombok</groupId>
++            <artifactId>lombok</artifactId>
++            <optional>true</optional>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-test</artifactId>
++            <scope>test</scope>
++            <exclusions>
++                <exclusion>
++                    <groupId>org.junit.vintage</groupId>
++                    <artifactId>junit-vintage-engine</artifactId>
++                </exclusion>
++            </exclusions>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.security</groupId>
++            <artifactId>spring-security-test</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-data-jpa</artifactId>
++            <version>2.2.2.RELEASE</version>
++            <scope>compile</scope>
++        </dependency>
++    </dependencies>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.springframework.boot</groupId>
++                <artifactId>spring-boot-maven-plugin</artifactId>
++            </plugin>
++        </plugins>
++    </build>
++
++</project>
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/TodoistappApplication.java b/src/main/java/com/todoist/todoistapp/TodoistappApplication.java
+new file mode 100644
+index 0000000..bf24ace
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/TodoistappApplication.java
+@@ -0,0 +1,13 @@
++package com.todoist.todoistapp;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++@SpringBootApplication
++public class TodoistappApplication {
++
++    public static void main(String[] args) {
++        SpringApplication.run(TodoistappApplication.class, args);
++    }
++
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/controller/LabelController.java b/src/main/java/com/todoist/todoistapp/controller/LabelController.java
+new file mode 100644
+index 0000000..2dfc77e
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/controller/LabelController.java
+@@ -0,0 +1,4 @@
++package com.todoist.todoistapp.controller;
++
++public class LabelController {
++}
+diff --git a/src/main/java/com/todoist/todoistapp/controller/TaskController.java b/src/main/java/com/todoist/todoistapp/controller/TaskController.java
+new file mode 100644
+index 0000000..6fbd233
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/controller/TaskController.java
+@@ -0,0 +1,58 @@
++package com.todoist.todoistapp.controller;
++
++import com.example.todoist.requestBean.TaskRequest;
++import com.example.todoist.service.TaskService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++import java.util.List;
++
++@Controller
++@RequestMapping("/rest/v1/")
++public class TaskController {
++
++    @Autowired
++    TaskService taskService;
++
++    @GetMapping("/tasks")
++    public ResponseEntity<List<TaskRequest>> getActiveTaskList() {
++        return new ResponseEntity<List<TaskRequest>>(taskService.getActiveTasks(), HttpStatus.OK);
++    }
++
++    @PostMapping("/tasks")
++    public ResponseEntity<TaskRequest> taskCreation(@RequestBody TaskRequest taskRequest) {
++        return new ResponseEntity<TaskRequest>(taskService.createTask(taskRequest), HttpStatus.OK);
++    }
++
++    @GetMapping("/tasks/{id}")
++    public ResponseEntity<TaskRequest> getAnActiveTask(@PathVariable("id") int id) {
++        return new ResponseEntity<TaskRequest>(taskService.getActiveTask(id), HttpStatus.OK);
++    }
++
++    @PostMapping("/tasks/{id}")
++    public ResponseEntity<String> taskUpdation(@PathVariable("id") int id, TaskRequest taskRequest) {
++        taskService.updateTask(id, taskRequest);
++        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
++    }
++
++    @PostMapping("/tasks/{id}/close")
++    public ResponseEntity<String> taskClosure(@PathVariable("id") int id) {
++        taskService.closeTask(id);
++        return new ResponseEntity<>(HttpStatus.OK);
++    }
++
++    @PostMapping("/tasks/{id}/reopen")
++    public ResponseEntity<String> taskReopen(@PathVariable("id") int id) {
++        taskService.reopenTask(id);
++        return new ResponseEntity<>(HttpStatus.OK);
++    }
++
++    @DeleteMapping("/tasks/{id}")
++    public ResponseEntity<String> taskDeletion(@PathVariable("id") int id) {
++        taskService.deleteTask(id);
++        return new ResponseEntity<>(HttpStatus.OK);
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/dao/DueDAO.java b/src/main/java/com/todoist/todoistapp/dao/DueDAO.java
+new file mode 100644
+index 0000000..fafb958
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/dao/DueDAO.java
+@@ -0,0 +1,14 @@
++package com.todoist.todoistapp.dao;
++
++import com.example.todoist.model.Due;
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Query;
++import org.springframework.data.repository.query.Param;
++
++public interface DueDAO extends JpaRepository<Due, String> {
++
++    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Due c WHERE c.string = :string")
++    boolean existsByString(@Param("string") String string);
++
++    Due findDueByString(String string);
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/dao/LabelDAO.java b/src/main/java/com/todoist/todoistapp/dao/LabelDAO.java
+new file mode 100644
+index 0000000..d7384a2
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/dao/LabelDAO.java
+@@ -0,0 +1,7 @@
++package com.todoist.todoistapp.dao;
++
++import com.example.todoist.model.Label;
++import org.springframework.data.jpa.repository.JpaRepository;
++
++public interface LabelDAO extends JpaRepository<Label, Integer> {
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/dao/TaskDAO.java b/src/main/java/com/todoist/todoistapp/dao/TaskDAO.java
+new file mode 100644
+index 0000000..16a2499
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/dao/TaskDAO.java
+@@ -0,0 +1,7 @@
++package com.todoist.todoistapp.dao;
++
++import com.example.todoist.model.Task;
++import org.springframework.data.jpa.repository.JpaRepository;
++
++public interface TaskDAO extends JpaRepository<Task, Integer> {
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/exception/TodoistException.java b/src/main/java/com/todoist/todoistapp/exception/TodoistException.java
+new file mode 100644
+index 0000000..f09bfba
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/exception/TodoistException.java
+@@ -0,0 +1,12 @@
++package com.example.todoist.exception;
++
++public class TodoistException extends Exception {
++
++    public TodoistException(int httpStatus) {
++        super(String.format("Request failed with HTTP Status %d", httpStatus));
++    }
++
++    public TodoistException(String message) {
++        super(message);
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/Activity.java b/src/main/java/com/todoist/todoistapp/model/Activity.java
+new file mode 100644
+index 0000000..8b338ee
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/Activity.java
+@@ -0,0 +1,28 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.*;
++
++@Entity
++@NoArgsConstructor
++@AllArgsConstructor
++@ToString
++public class Activity {
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private long id;
++
++    private String objectType;
++    private long objectId;
++    private String eventType;
++    private String eventDateTime;
++    private Long parentProjectId;
++    private Long parentItemId;
++    private Long initiatorId;
++
++    @OneToOne
++    private ExtraData extraData;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/Attachment.java b/src/main/java/com/todoist/todoistapp/model/Attachment.java
+new file mode 100644
+index 0000000..bad3806
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/Attachment.java
+@@ -0,0 +1,27 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.*;
++
++@Entity
++@AllArgsConstructor
++@NoArgsConstructor
++@ToString
++public class Attachment {
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private long fileId;
++
++    private long fileSize;
++    private String fileType;
++    private String fileName;
++    private String uploadState;
++    private String resourceType;
++    private String fileUrl;
++
++    @ManyToOne
++    private Comment comment;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/Comment.java b/src/main/java/com/todoist/todoistapp/model/Comment.java
+new file mode 100644
+index 0000000..a5198b0
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/Comment.java
+@@ -0,0 +1,29 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++import java.io.Serializable;
++
++@Entity
++@Data
++@ToString
++@NoArgsConstructor
++@AllArgsConstructor
++public class Comment implements Serializable {
++
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++    private Long taskId;
++    private Long projectId;
++    private String posted;
++    private String content;
++
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/Due.java b/src/main/java/com/todoist/todoistapp/model/Due.java
+new file mode 100644
+index 0000000..bcd66f4
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/Due.java
+@@ -0,0 +1,26 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.Entity;
++import javax.persistence.Id;
++import javax.persistence.Table;
++import java.io.Serializable;
++
++@Entity
++@Data
++@NoArgsConstructor
++@AllArgsConstructor
++@ToString
++@Table(name = "due")
++public class Due implements Serializable {
++
++    @Id
++    private String string;
++    private String date;
++    private String dateTime;
++    private String timezone;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/ExtraData.java b/src/main/java/com/todoist/todoistapp/model/ExtraData.java
+new file mode 100644
+index 0000000..bda02ee
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/ExtraData.java
+@@ -0,0 +1,21 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.Entity;
++import javax.persistence.Id;
++
++@Entity
++@ToString
++@NoArgsConstructor
++@AllArgsConstructor
++public class ExtraData {
++
++    private String content;
++
++    @Id
++    private String dueDate;
++    private String lastDueDate;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/Label.java b/src/main/java/com/todoist/todoistapp/model/Label.java
+new file mode 100644
+index 0000000..52d1e00
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/Label.java
+@@ -0,0 +1,26 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++@ToString
++@Data
++@NoArgsConstructor
++@AllArgsConstructor
++public class Label {
++
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private int id;
++
++    private String name;
++    private int order;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/Project.java b/src/main/java/com/todoist/todoistapp/model/Project.java
+new file mode 100644
+index 0000000..7f9f91e
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/Project.java
+@@ -0,0 +1,27 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.*;
++
++@Entity
++@Data
++@ToString
++@NoArgsConstructor
++@AllArgsConstructor
++public class Project {
++
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private long id;
++
++    @Column(nullable = false)
++    private String name;
++
++    private int order;
++    private int indent;
++    private int commentCount;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/model/Task.java b/src/main/java/com/todoist/todoistapp/model/Task.java
+new file mode 100644
+index 0000000..fd1e5a2
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/model/Task.java
+@@ -0,0 +1,56 @@
++package com.todoist.todoistapp.model;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++import lombok.ToString;
++
++import javax.persistence.*;
++import java.io.Serializable;
++import java.util.List;
++
++@Entity
++@Data
++@Table(name = "task")
++@NoArgsConstructor
++@AllArgsConstructor
++@ToString
++public class Task implements Serializable {
++
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private int id;
++
++    @Column(nullable = false)
++    private int projectId;
++
++    @Column(nullable = false)
++    private int sectionId;
++
++    @Column(nullable = false)
++    private String content;
++
++    @Column(nullable = false)
++    private Boolean completed;
++
++    @OneToMany
++    private List<Label> labelIds;
++
++    private int parent;
++
++    private int order;
++
++    private int indent;
++
++    private int priority;
++
++    @Column(nullable = false)
++    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
++    private Due due;
++
++    @Column(nullable = false)
++    private String url;
++
++    @Column(nullable = true)
++    private int commentCount;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/requestBean/DueRequest.java b/src/main/java/com/todoist/todoistapp/requestBean/DueRequest.java
+new file mode 100644
+index 0000000..9feab13
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/requestBean/DueRequest.java
+@@ -0,0 +1,15 @@
++package com.todoist.todoistapp.requestBean;
++
++import lombok.*;
++
++@Builder
++@Data
++@ToString
++@NoArgsConstructor
++@AllArgsConstructor
++public class DueRequest {
++    private String string;
++    private String date;
++    private String dateTime;
++    private String timezone;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/requestBean/Labelrequest.java b/src/main/java/com/todoist/todoistapp/requestBean/Labelrequest.java
+new file mode 100644
+index 0000000..0e62ad5
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/requestBean/Labelrequest.java
+@@ -0,0 +1,14 @@
++package com.todoist.todoistapp.requestBean;
++
++import lombok.*;
++
++@Builder
++@Data
++@ToString
++@NoArgsConstructor
++@AllArgsConstructor
++public class Labelrequest {
++    private int id;
++    private String name;
++    private int order;
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/requestBean/TaskRequest.java b/src/main/java/com/todoist/todoistapp/requestBean/TaskRequest.java
+new file mode 100644
+index 0000000..bf6f938
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/requestBean/TaskRequest.java
+@@ -0,0 +1,27 @@
++package com.todoist.todoistapp.requestBean;
++
++import lombok.*;
++
++import java.util.List;
++
++@Builder
++@Data
++@ToString
++@NoArgsConstructor
++@AllArgsConstructor
++public class TaskRequest {
++    private int id;
++    private int projectId;
++    private int sectionId;
++    private String content;
++    private Boolean completed;
++    private List<Integer> labelIds;
++    private int parent;
++    private int order;
++    private int indent;
++    private int priority;
++    private DueRequest due;
++    private String url;
++    private int commentCount;
++
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/service/LabelService.java b/src/main/java/com/todoist/todoistapp/service/LabelService.java
+new file mode 100644
+index 0000000..15b7b35
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/service/LabelService.java
+@@ -0,0 +1,9 @@
++package com.todoist.todoistapp.service;
++
++public interface LabelService {
++}
++    Get all labels
++        Create a new label
++        Get a label
++        Update a label
++        Delete a label
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/service/TaskService.java b/src/main/java/com/todoist/todoistapp/service/TaskService.java
+new file mode 100644
+index 0000000..0b8e071
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/service/TaskService.java
+@@ -0,0 +1,22 @@
++package com.todoist.todoistapp.service;
++
++import com.example.todoist.requestBean.TaskRequest;
++
++import java.util.List;
++
++public interface TaskService {
++
++    List<TaskRequest> getActiveTasks();
++
++    TaskRequest createTask(TaskRequest taskRequest);
++
++    TaskRequest getActiveTask(int id);
++
++    void updateTask(int id, TaskRequest taskRequest);
++
++    void closeTask(int id);
++
++    void reopenTask(int id);
++
++    void deleteTask(int id);
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/todoist/todoistapp/service/impl/TaskServiceImpl.java b/src/main/java/com/todoist/todoistapp/service/impl/TaskServiceImpl.java
+new file mode 100644
+index 0000000..f04a573
+--- /dev/null
++++ b/src/main/java/com/todoist/todoistapp/service/impl/TaskServiceImpl.java
+@@ -0,0 +1,179 @@
++package com.todoist.todoistapp.service.impl;
++
++import com.example.todoist.repository.DueRepository;
++import com.example.todoist.repository.TaskRepository;
++import com.example.todoist.model.Due;
++import com.example.todoist.model.Label;
++import com.example.todoist.model.Task;
++import com.example.todoist.requestBean.DueRequest;
++import com.example.todoist.requestBean.TaskRequest;
++import com.example.todoist.service.TaskService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++import java.util.ArrayList;
++import java.util.List;
++
++@Service
++public class TaskServiceImpl implements TaskService {
++
++    @Autowired
++    TaskDAO taskDAO;
++
++    @Autowired
++    DueDAO dueDAO;
++
++    @Override
++    public List<TaskRequest> getActiveTasks() {
++        List<TaskRequest> activeTaskRequestList = new ArrayList<>();
++        List<Task> taskList = taskDAO.findAll();
++        for (Task task : taskList) {
++            if (task.getCompleted() == false) {
++                TaskRequest activeTaskResponse = TaskRequest.builder()
++                        .id(task.getId())
++                        .projectId(task.getProjectId())
++                        .sectionId(task.getSectionId())
++                        .content(task.getContent())
++                        .commentCount(task.getCommentCount())
++                        .order(task.getOrder())
++                        .priority(task.getPriority())
++                        .url(task.getUrl())
++                        .build();
++                activeTaskRequestList.add(activeTaskResponse);
++            }
++        }
++        return activeTaskRequestList;
++    }
++
++
++    @Override
++    public TaskRequest createTask(TaskRequest taskRequest) {
++        Task task = new Task();
++        task.setProjectId(taskRequest.getProjectId());
++        task.setSectionId(taskRequest.getSectionId());
++        task.setContent(taskRequest.getContent());
++        task.setCompleted(taskRequest.getCompleted());
++        task.setParent(taskRequest.getParent());
++        task.setOrder(taskRequest.getOrder());
++        task.setIndent(taskRequest.getIndent());
++        task.setPriority(taskRequest.getPriority());
++        task.setUrl(taskRequest.getUrl());
++        task.setCommentCount(taskRequest.getCommentCount());
++        Due due = null;
++        if (dueDAO.existsByString(taskRequest.getDue().getString())) {
++            due = dueDAO.findDueByString(taskRequest.getDue().getString());
++        } else {
++            due = new Due();
++            due.setString(taskRequest.getDue().getString());
++            due.setDate(taskRequest.getDue().getDate());
++            due.setDateTime(taskRequest.getDue().getDateTime());
++            due.setTimezone(taskRequest.getDue().getTimezone());
++        }
++        task.setDue(due);
++        List<Label> labelIds = new ArrayList<>();
++        for (Integer id : taskRequest.getLabelIds()) {
++            Label label = new Label();
++            label.setId(id);
++            labelIds.add(label);
++        }
++        task.setLabelIds(labelIds);
++
++        DueRequest dueRequest = new DueRequest();
++        dueRequest.setDate(task.getDue().getDate());
++        dueRequest.setDateTime(task.getDue().getDateTime());
++        dueRequest.setString(task.getDue().getString());
++        dueRequest.setTimezone(task.getDue().getTimezone());
++
++        TaskRequest activeTaskResponse = TaskRequest.builder()
++                .commentCount(task.getCommentCount())
++                .completed(task.getCompleted())
++                .content(task.getContent())
++                .due(dueRequest)
++                .id(task.getId())
++                .order(task.getOrder())
++                .priority(task.getPriority())
++                .projectId(task.getProjectId())
++                .sectionId(task.getSectionId())
++                .url(task.getUrl())
++                .build();
++        return activeTaskResponse;
++    }
++
++
++    @Override
++    public TaskRequest getActiveTask(int id) {
++        Task task = taskDAO.getOne(id);
++        DueRequest dueRequest = new DueRequest();
++        dueRequest.setDate(task.getDue().getDate());
++        dueRequest.setDateTime(task.getDue().getDateTime());
++        dueRequest.setString(task.getDue().getString());
++        dueRequest.setTimezone(task.getDue().getTimezone());
++        TaskRequest activeTaskResponse = TaskRequest.builder()
++                .commentCount(task.getCommentCount())
++                .completed(task.getCompleted())
++                .content(task.getContent())
++                .due(dueRequest)
++                .id(task.getId())
++                .order(task.getOrder())
++                .priority(task.getPriority())
++                .projectId(task.getProjectId())
++                .sectionId(task.getSectionId())
++                .url(task.getUrl())
++                .build();
++        return activeTaskResponse;
++    }
++
++
++    @Override
++    public void updateTask(int id, TaskRequest taskRequest) {
++        Task task = taskDAO.getOne(id);
++        task.setProjectId(taskRequest.getProjectId());
++        task.setSectionId(taskRequest.getSectionId());
++        task.setContent(taskRequest.getContent());
++        task.setCompleted(taskRequest.getCompleted());
++        task.setParent(taskRequest.getParent());
++        task.setOrder(taskRequest.getOrder());
++        task.setIndent(taskRequest.getIndent());
++        task.setPriority(taskRequest.getPriority());
++        task.setUrl(taskRequest.getUrl());
++        task.setCommentCount(taskRequest.getCommentCount());
++        Due due = null;
++        if (dueDAO.existsByString(taskRequest.getDue().getString())) {
++            due = dueDAO.findDueByString(taskRequest.getDue().getString());
++        } else {
++            due = new Due();
++            due.setString(taskRequest.getDue().getString());
++            due.setDate(taskRequest.getDue().getDate());
++            due.setDateTime(taskRequest.getDue().getDateTime());
++            due.setTimezone(taskRequest.getDue().getTimezone());
++        }
++        task.setDue(due);
++        List<Label> labelIds = new ArrayList<>();
++        for (Integer labelId : taskRequest.getLabelIds()) {
++            Label label = new Label();
++            label.setId(labelId);
++            labelIds.add(label);
++        }
++        task.setLabelIds(labelIds);
++    }
++
++
++    @Override
++    public void closeTask(int id) {
++        Task task = taskDAO.getOne(id);
++        task.setCompleted(true);
++    }
++
++
++    @Override
++    public void reopenTask(int id) {
++        Task task = taskDAO.getOne(id);
++        task.setCompleted(false);
++    }
++
++
++    @Override
++    public void deleteTask(int id) {
++        taskDAO.deleteById(id);
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/main/resources/application.properties
+@@ -0,0 +1 @@
++
+diff --git a/src/test/java/com/todoist/todoistapp/TodoistappApplicationTests.java b/src/test/java/com/todoist/todoistapp/TodoistappApplicationTests.java
+new file mode 100644
+index 0000000..c3cafc7
+--- /dev/null
++++ b/src/test/java/com/todoist/todoistapp/TodoistappApplicationTests.java
+@@ -0,0 +1,13 @@
++package com.todoist.todoistapp;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.boot.test.context.SpringBootTest;
++
++@SpringBootTest
++class TodoistappApplicationTests {
++
++    @Test
++    void contextLoads() {
++    }
++
++}

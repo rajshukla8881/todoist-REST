@@ -7,10 +7,8 @@ import com.example.todoist.repository.ProjectRepository;
 import com.example.todoist.repository.SectionRepository;
 
 import com.example.todoist.repository.TaskRepository;
-import com.example.todoist.responseBean.ActiveTaskResponse;
-import com.example.todoist.responseBean.ProjectResponse;
-import com.example.todoist.responseBean.ProjectSectionTaskResponse;
-import com.example.todoist.responseBean.SectionTaskResponse;
+import com.example.todoist.requestBean.DueRequest;
+import com.example.todoist.responseBean.*;
 import com.example.todoist.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,20 +63,28 @@ public class ProjectServiceImplementer implements ProjectService {
             List<SectionTaskResponse> sectionTaskResponseList = new ArrayList<>();
             for (Section section : sectionList) {
                 List<Task> taskList = taskDAO.getTaskBySectionIdAndProjectId(section.getId(), id);
-                List<ActiveTaskResponse> activeTaskResponseList = new ArrayList<>();
-                for (Task task : taskList) {
-                    ActiveTaskResponse activeTaskResponse = ActiveTaskResponse.builder()
-                            .id(task.getId())
-                            .project_id(task.getProjectId())
-                            .section_id(task.getSectionId())
-                            .content(task.getContent())
-                            .comment_count(task.getCommentCount())
-                            .order(task.getOrders())
-                            .priority(task.getPriority())
-                            .url(task.getUrl())
+                List<CreateTaskResponse> createTaskRequestList = new ArrayList<>();
+                for (Task saveTask : taskList) {
+                    DueRequest dueRequest = new DueRequest();
+                    if (saveTask.getDue() != null) {
+                        dueRequest.setDate(saveTask.getDue().getDate());
+                        dueRequest.setDatetime(saveTask.getDue().getDatetime());
+                        dueRequest.setString(saveTask.getDue().getString());
+                        dueRequest.setTimezone(saveTask.getDue().getTimezone());
+                    }
+                    CreateTaskResponse createTaskResponse = CreateTaskResponse.builder()
+                            .comment_count(saveTask.getCommentCount())
+                            .completed(saveTask.isCompleted())
+                            .content(saveTask.getContent())
+                            .due(dueRequest)
+                            .id(saveTask.getId())
+                            .order(saveTask.getOrders())
+                            .priority(saveTask.getPriority())
+                            .project_id(saveTask.getProjectId())
+                            .section_id(saveTask.getSectionId())
+                            .url(saveTask.getUrl())
                             .build();
-
-                    activeTaskResponseList.add(activeTaskResponse);
+                    createTaskRequestList.add(createTaskResponse);
                 }
 
                 SectionTaskResponse sectionTaskResponse = SectionTaskResponse.builder()
@@ -86,30 +92,39 @@ public class ProjectServiceImplementer implements ProjectService {
                         .project_id(section.getProjectId())
                         .order(section.getSectionOrder())
                         .name(section.getName())
-                        .task(activeTaskResponseList)
+                        .task(createTaskRequestList)
                         .build();
 
                 sectionTaskResponseList.add(sectionTaskResponse);
             }
 
             List<Task> taskList = taskDAO.getTaskBySectionIdAndProjectId(0, id);
-            List<ActiveTaskResponse> activeTaskRequestList = new ArrayList<>();
-            for (Task task : taskList) {
+            List<CreateTaskResponse> createTaskRequestList = new ArrayList<>();
+            for (Task saveTask : taskList) {
 
-                ActiveTaskResponse activeTaskResponse = ActiveTaskResponse.builder()
-                        .id(task.getId())
-                        .project_id(task.getProjectId())
-                        .section_id(task.getSectionId())
-                        .content(task.getContent())
-                        .comment_count(task.getCommentCount())
-                        .order(task.getOrders())
-                        .priority(task.getPriority())
-                        .url(task.getUrl())
+                DueRequest dueRequest = new DueRequest();
+                if (saveTask.getDue() != null) {
+                    dueRequest.setDate(saveTask.getDue().getDate());
+                    dueRequest.setDatetime(saveTask.getDue().getDatetime());
+                    dueRequest.setString(saveTask.getDue().getString());
+                    dueRequest.setTimezone(saveTask.getDue().getTimezone());
+                }
+                CreateTaskResponse createTaskResponse = CreateTaskResponse.builder()
+                        .comment_count(saveTask.getCommentCount())
+                        .completed(saveTask.isCompleted())
+                        .content(saveTask.getContent())
+                        .due(dueRequest)
+                        .id(saveTask.getId())
+                        .order(saveTask.getOrders())
+                        .priority(saveTask.getPriority())
+                        .project_id(saveTask.getProjectId())
+                        .section_id(saveTask.getSectionId())
+                        .url(saveTask.getUrl())
                         .build();
-                activeTaskRequestList.add(activeTaskResponse);
+                createTaskRequestList.add(createTaskResponse);
             }
             projectSectionTaskResponse.setSection(sectionTaskResponseList);
-            projectSectionTaskResponse.setTask(activeTaskRequestList);
+            projectSectionTaskResponse.setTask(createTaskRequestList);
             return projectSectionTaskResponse;
         } else {
             return new ProjectSectionTaskResponse();

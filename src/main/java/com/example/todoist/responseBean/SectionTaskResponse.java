@@ -12,5 +12,5 @@ public class SectionTaskResponse {
     Integer project_id;
     Integer order;
     String name;
-    List<ActiveTaskResponse> task;
+    List<CreateTaskResponse> task;
 }

@@ -11,5 +11,5 @@ public class ProjectSectionTaskResponse {
     Integer comment_count;
     Integer order;
     List<SectionTaskResponse> section;
-    List<ActiveTaskResponse> task;
+    List<CreateTaskResponse> task;
 }
